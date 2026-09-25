@@ -2,13 +2,15 @@
 
 Багатосторінковий сайт історичного музею на **React + Vite**, **чистому JavaScript**, **Sass (SCSS)** та **GSAP** (ScrollTrigger, useGSAP).
 
+**Сайт:** https://elinamrachkovska.github.io/museum_sun/
+
 ## Запуск
 
 ```bash
 npm install
 npm run dev      # http://localhost:5173
 npm run build    # production-збірка в dist/
-npm run preview  # перегляд збірки
+npm run preview  # перегляд збірки за адресою /museum_sun/, як на GitHub Pages
 ```
 
 ## Сторінки
@@ -22,6 +24,11 @@ npm run preview  # перегляд збірки
 | `/register` | Форма реєстрації (перевірка пароля, інтереси, згода) |
 | `/contacts` | Форма зворотного зв’язку та карта |
 | `/reviews` | Відгуки та пропозиції (оцінка зірками, фільтр) |
+
+## Публікація на GitHub Pages
+
+Після кожного пушу в `main` сайт збирається й публікується автоматично (`.github/workflows/deploy.yml`).
+Одноразове налаштування: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
 ## Відео
 

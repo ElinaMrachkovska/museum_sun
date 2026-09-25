@@ -1,5 +1,8 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 
+// Додає базовий шлях сайту (для GitHub Pages: /museum_sun/) до шляхів з public/
+const withBase = (path) => (path?.startsWith('/') ? import.meta.env.BASE_URL + path.slice(1) : path);
+
 // Відеофон. Якщо файлу немає або він не завантажився —
 // показується анімований «вогняний» фон у кольорах розділу.
 const VideoBg = forwardRef(function VideoBg({ src, poster, palette = [], playing = true, className = '' }, ref) {
@@ -34,8 +37,8 @@ const VideoBg = forwardRef(function VideoBg({ src, poster, palette = [], playing
         <video
           ref={videoRef}
           className="video-bg__video"
-          src={src}
-          poster={poster}
+          src={withBase(src)}
+          poster={withBase(poster)}
           muted
           loop
           playsInline
