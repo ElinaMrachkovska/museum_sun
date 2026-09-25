@@ -27,8 +27,14 @@ npm run preview  # перегляд збірки за адресою /museum_sun
 
 ## Публікація на GitHub Pages
 
-Після кожного пушу в `main` сайт збирається й публікується автоматично (`.github/workflows/deploy.yml`).
-Одноразове налаштування: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+Сайт публікується з гілки `gh-pages`. Щоб оновити сайт після змін:
+
+```bash
+npm run deploy
+```
+
+Команда збирає проєкт і пушить вміст `dist/` у гілку `gh-pages`.
+Одноразове налаштування: **Settings → Pages → Build and deployment → Source: Deploy from a branch → `gh-pages` / `(root)`**.
 
 ## Відео
 
