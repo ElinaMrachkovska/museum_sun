@@ -1,0 +1,89 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 30px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: background 0.35s $ease, color 0.35s $ease, border-color 0.35s $ease, box-shadow 0.35s $ease;
+  will-change: transform;
+  isolation: isolate;
+
+  // «Заливка» при наведенні
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    transform: translateY(101%);
+    transition: transform 0.5s $ease;
+  }
+
+  &:hover::before { transform: translateY(0); }
+
+  &--gold {
+    background: linear-gradient(135deg, $c-gold-light, $c-gold 55%, #9c7a2c);
+    color: #1b140a;
+    box-shadow: 0 10px 30px -10px rgba($c-gold, 0.7);
+
+    &::before { background: $c-text; }
+    &:hover { box-shadow: 0 16px 40px -10px rgba($c-gold, 0.9); }
+  }
+
+  &--ghost {
+    background: transparent;
+    border-color: rgba($c-text, 0.4);
+    color: $c-text;
+
+    &::before { background: $c-text; }
+    &:hover { color: $c-bg; border-color: $c-text; }
+  }
+
+  &--sm { padding: 10px 20px; font-size: 0.85rem; }
+  &--block { width: 100%; }
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chip {
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid $c-line;
+  color: $c-muted;
+  font-size: 0.88rem;
+  transition: all 0.3s $ease;
+
+  &:hover { border-color: $c-gold; color: $c-text; }
+
+  &.is-active {
+    background: $c-gold;
+    border-color: $c-gold;
+    color: $c-bg;
+  }
+}
+
+.filters,
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

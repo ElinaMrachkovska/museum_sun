@@ -1,0 +1,113 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  height: $header-h;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-inline: 16px;
+  transition: background 0.4s ease, height 0.4s ease, border-color 0.4s ease;
+  border-bottom: 1px solid transparent;
+
+  @include up(md) { padding-inline: 40px; }
+
+  &--scrolled {
+    height: 68px;
+    background: rgba($c-bg, 0.82);
+    backdrop-filter: blur(12px);
+    border-color: $c-line;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: $c-gold;
+    z-index: 2;
+
+    span { display: flex; flex-direction: column; line-height: 1; }
+    strong { font-family: $f-serif; font-size: 1.3rem; color: $c-text; }
+    em { font-family: $f-serif; font-style: italic; font-size: 1rem; }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    z-index: 2;
+  }
+
+  &__login {
+    font-size: 0.9rem;
+    @include down(md) { display: none; }
+  }
+}
+
+.nav {
+  &--desktop {
+    display: none;
+    gap: 30px;
+    @include up(md) { display: flex; }
+  }
+
+  &__link {
+    font-size: 0.92rem;
+    color: rgba($c-text, 0.85);
+  }
+}
+
+.burger {
+  width: 44px;
+  height: 44px;
+  border: 1px solid $c-line;
+  border-radius: 50%;
+  background: transparent;
+  display: grid;
+  place-content: center;
+  gap: 6px;
+
+  @include up(md) { display: none; }
+
+  span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: $c-text;
+    transition: transform 0.4s $ease;
+  }
+
+  &.is-open span:first-child { transform: translateY(3.75px) rotate(45deg); }
+  &.is-open span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: rgba($c-bg, 0.97);
+  clip-path: circle(0 at calc(100% - 38px) 42px);
+  transition: clip-path 0.7s $ease;
+  display: flex;
+  align-items: center;
+  padding: 40px 24px;
+  pointer-events: none;
+
+  .header--open & {
+    clip-path: circle(150% at calc(100% - 38px) 42px);
+    pointer-events: auto;
+  }
+
+  .nav--mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    .nav__link { font-family: $f-serif; font-size: 2.2rem; }
+  }
+
+  @include up(md) { display: none; }
+}

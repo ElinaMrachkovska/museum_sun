@@ -1,0 +1,29 @@
+@use 'sass:map';
+@use 'variables' as *;
+
+@mixin up($key) {
+  @media (min-width: map.get($bp, $key)) { @content; }
+}
+
+@mixin down($key) {
+  @media (max-width: map.get($bp, $key) - 1) { @content; }
+}
+
+@mixin cover {
+  position: absolute;
+  inset: 0;
+}
+
+@mixin glass {
+  background: rgba(20, 16, 12, 0.6);
+  backdrop-filter: blur(14px);
+  border: 1px solid $c-line;
+}
+
+@mixin serif-title($size) {
+  font-family: $f-serif;
+  font-weight: 600;
+  line-height: 1.02;
+  font-size: $size;
+  letter-spacing: -0.01em;
+}

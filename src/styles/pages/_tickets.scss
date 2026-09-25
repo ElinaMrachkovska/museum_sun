@@ -1,0 +1,77 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.ticket-layout {
+  display: grid;
+  gap: 30px;
+  align-items: start;
+  @include up(md) { grid-template-columns: 1fr 360px; }
+}
+
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-block: 12px;
+  border-bottom: 1px solid $c-line;
+
+  &:last-of-type { border-bottom: 0; }
+  &__label { font-weight: 500; }
+  &__price { color: $c-gold; font-size: 0.9rem; }
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid $c-line;
+  border-radius: 999px;
+  padding: 4px;
+
+  button {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(255, 255, 255, 0.06);
+    font-size: 1.2rem;
+    transition: background 0.3s ease, color 0.3s ease;
+
+    &:hover { background: $c-gold; color: $c-bg; }
+  }
+
+  output { min-width: 28px; text-align: center; font-weight: 600; }
+}
+
+.ticket-summary {
+  @include up(md) { position: sticky; top: 100px; }
+
+  &__card {
+    @include glass;
+    border-radius: 20px;
+    padding: 28px;
+    // Перфорація «квитка»
+    mask: radial-gradient(circle 12px at 0 62%, transparent 98%, #000) , radial-gradient(circle 12px at 100% 62%, transparent 98%, #000);
+    mask-composite: intersect;
+
+    ul { list-style: none; padding: 0; margin: 0 0 16px; display: grid; gap: 10px; }
+    li { display: flex; justify-content: space-between; gap: 12px; font-size: 0.92rem; }
+  }
+
+  &__meta {
+    padding-block: 14px;
+    border-block: 1px dashed $c-line;
+    color: $c-muted;
+    font-size: 0.9rem;
+  }
+
+  &__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 18px 0 22px;
+
+    strong { @include serif-title(2.4rem); color: $c-gold; display: inline-block; }
+  }
+}

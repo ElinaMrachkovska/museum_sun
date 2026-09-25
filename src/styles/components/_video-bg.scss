@@ -1,0 +1,67 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.video-bg {
+  @include cover;
+  overflow: hidden;
+  background: var(--c3);
+
+  &__video {
+    @include cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // Анімований фон-замінник (коли відео ще не додано)
+  &__fallback {
+    @include cover;
+    opacity: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 110%, var(--c2), transparent 65%),
+      radial-gradient(ellipse 60% 50% at 85% 0%, color-mix(in srgb, var(--c2) 50%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--c1), var(--c3));
+  }
+
+  &--fallback &__fallback { opacity: 1; }
+
+  &__glow {
+    @include cover;
+    background: radial-gradient(circle at 50% 100%, var(--c2), transparent 55%);
+    mix-blend-mode: screen;
+    animation: glow 7s ease-in-out infinite alternate;
+  }
+
+  // «Іскри» над полем бою
+  &__embers {
+    @include cover;
+    background-image:
+      radial-gradient(2px 2px at 10% 90%, #ffb45a, transparent),
+      radial-gradient(1.5px 1.5px at 25% 70%, #ffd48a, transparent),
+      radial-gradient(2px 2px at 40% 95%, #ff8a3a, transparent),
+      radial-gradient(1px 1px at 55% 80%, #ffe0a0, transparent),
+      radial-gradient(2px 2px at 70% 92%, #ffb45a, transparent),
+      radial-gradient(1.5px 1.5px at 85% 75%, #ff9c4a, transparent),
+      radial-gradient(1px 1px at 95% 88%, #ffd48a, transparent);
+    background-size: 100% 100%;
+    animation: embers 9s linear infinite;
+    opacity: 0.8;
+  }
+
+  &__shade {
+    @include cover;
+    background:
+      linear-gradient(180deg, rgba($c-bg, 0.55) 0%, rgba($c-bg, 0.15) 40%, rgba($c-bg, 0.85) 100%),
+      radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+  }
+}
+
+@keyframes glow {
+  from { opacity: 0.35; transform: scale(1); }
+  to { opacity: 0.8; transform: scale(1.15); }
+}
+
+@keyframes embers {
+  from { transform: translateY(0); opacity: 0.9; }
+  to { transform: translateY(-60%); opacity: 0; }
+}

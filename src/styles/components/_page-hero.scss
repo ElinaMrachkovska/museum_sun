@@ -1,0 +1,31 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.page-hero {
+  position: relative;
+  min-height: 72vh;
+  display: flex;
+  align-items: flex-end;
+  padding: calc(#{$header-h} + 40px) 0 70px;
+  overflow: hidden;
+
+  &__content { position: relative; z-index: 2; }
+
+  &__kicker {
+    color: $c-gold;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    @include serif-title(clamp(2.6rem, 8vw, 6.2rem));
+    max-width: 14ch;
+  }
+
+  &__text { max-width: 560px; margin-top: 22px; color: rgba($c-text, 0.85); font-size: 1.08rem; }
+}
+
+.word-wrap { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; }
+.word { display: inline-block; }

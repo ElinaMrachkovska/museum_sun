@@ -1,0 +1,74 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.about-intro {
+  display: grid;
+  gap: 40px;
+  @include up(md) { grid-template-columns: 1fr 1fr; gap: 80px; }
+
+  &__text { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; color: rgba($c-text, 0.85); }
+}
+
+.stats {
+  border-block: 1px solid $c-line;
+  background: $c-bg-2;
+  padding-block: 60px;
+
+  &__grid {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    @include up(md) { grid-template-columns: repeat(4, 1fr); }
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__num { @include serif-title(clamp(2.4rem, 5vw, 4rem)); color: $c-gold; }
+  &__label { color: $c-muted; font-size: 0.9rem; }
+}
+
+.milestones {
+  position: relative;
+  display: grid;
+  gap: 30px;
+  margin-top: 40px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient($c-gold, transparent);
+    display: none;
+    @include up(md) { display: block; }
+  }
+}
+
+.milestone {
+  @include glass;
+  padding: 26px 28px;
+  border-radius: $radius;
+
+  @include up(md) {
+    width: calc(50% - 40px);
+    &:nth-child(even) { margin-left: auto; }
+  }
+
+  &__year { display: block; @include serif-title(2.6rem); color: $c-gold; margin-bottom: 8px; }
+  p { color: rgba($c-text, 0.85); }
+}
+
+.visit {
+  display: grid;
+  gap: 30px;
+  @include up(md) { grid-template-columns: repeat(3, 1fr); }
+
+  h3 { @include serif-title(1.7rem); color: $c-gold; margin-bottom: 10px; }
+  p { color: $c-muted; }
+}

@@ -1,0 +1,40 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+
+  &__box {
+    @include glass;
+    width: min(440px, 100%);
+    padding: 40px 30px 30px;
+    border-radius: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  &__seal {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    color: $c-bg;
+    background: radial-gradient(circle at 30% 30%, $c-gold-light, $c-gold 60%, #7a5a1c);
+    box-shadow: 0 0 40px rgba($c-gold, 0.5);
+  }
+
+  &__title { @include serif-title(2rem); }
+  &__body { color: $c-muted; display: grid; gap: 6px; margin-bottom: 10px; strong { color: $c-text; } }
+}

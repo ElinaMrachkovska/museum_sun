@@ -1,0 +1,94 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: $c-bg;
+  color: $c-text;
+  font-family: $f-sans;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+
+  &.no-scroll { overflow: hidden; }
+}
+
+img, video, iframe { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+
+::selection { background: $c-gold; color: $c-bg; }
+
+:focus-visible {
+  outline: 2px solid $c-gold-light;
+  outline-offset: 3px;
+}
+
+.container {
+  width: min(1200px, 100% - 32px);
+  margin-inline: auto;
+
+  @include up(md) { width: min(1200px, 100% - 80px); }
+}
+
+.section { padding-block: 90px; }
+
+.section-kicker {
+  color: $c-gold;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.section-title { @include serif-title(clamp(2rem, 4.5vw, 3.4rem)); margin-bottom: 24px; }
+
+.muted { color: $c-muted; }
+
+// ---------- Анімовані посилання (Sass-частина; GSAP додає підйом при наведенні)
+.link-fx {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.45s $ease;
+  }
+
+  &:hover,
+  &.is-active {
+    color: $c-gold-light;
+
+    &::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+}
+
+.link-arrow { color: $c-gold; font-weight: 500; margin-top: 18px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

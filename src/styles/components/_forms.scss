@@ -1,0 +1,162 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__row {
+    display: grid;
+    gap: 0 18px;
+    @include up(sm) { grid-template-columns: 1fr 1fr; }
+  }
+
+  &__group {
+    border: 1px solid $c-line;
+    border-radius: $radius;
+    padding: 22px 22px 12px;
+    margin: 0 0 18px;
+    background: $c-surface;
+
+    legend {
+      padding-inline: 8px;
+      font-family: $f-serif;
+      font-size: 1.35rem;
+      color: $c-gold;
+    }
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__label {
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $c-muted;
+  }
+
+  &__control {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid $c-line;
+    background: rgba(0, 0, 0, 0.3);
+    color: $c-text;
+    font: inherit;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    color-scheme: dark;
+
+    &:hover { border-color: rgba($c-gold, 0.5); }
+
+    &:focus {
+      outline: none;
+      border-color: $c-gold;
+      background: rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 0 4px rgba($c-gold, 0.15);
+    }
+
+    &::placeholder { color: rgba($c-muted, 0.6); }
+  }
+
+  textarea.field__control { resize: vertical; min-height: 120px; }
+
+  &__error {
+    min-height: 1.2em;
+    font-size: 0.8rem;
+    color: $c-error;
+  }
+
+  &--error .field__control {
+    border-color: $c-error;
+    animation: shake 0.4s;
+  }
+}
+
+.checkbox,
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 0.92rem;
+
+  input {
+    appearance: none;
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border: 1px solid rgba($c-text, 0.4);
+    background: transparent;
+    display: grid;
+    place-content: center;
+    transition: all 0.25s ease;
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      transform: scale(0);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: $c-bg;
+    }
+
+    &:checked { background: $c-gold; border-color: $c-gold; }
+    &:checked::after { transform: scale(1); }
+  }
+}
+
+.checkbox {
+  margin-top: 8px;
+  input { border-radius: 6px; }
+  input::after { clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); }
+  &--error input { border-color: $c-error; }
+}
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.radio {
+  padding: 12px 18px;
+  border: 1px solid $c-line;
+  border-radius: 10px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+
+  input { border-radius: 50%; width: 18px; height: 18px; }
+  input::after { border-radius: 50%; width: 8px; height: 8px; }
+
+  &:hover { border-color: rgba($c-gold, 0.6); }
+  &.is-checked { border-color: $c-gold; background: rgba($c-gold, 0.08); }
+}
+
+.counter { text-align: right; font-size: 0.78rem; color: $c-muted; margin-top: -22px; }
+
+.strength {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin: -16px 0 18px;
+
+  span { height: 3px; border-radius: 2px; background: $c-line; transition: background 0.3s ease; }
+
+  @for $i from 1 through 4 {
+    $color: #6dbb73;
+    @if $i < 3 { $color: $c-error; } @else if $i == 3 { $color: $c-gold; }
+    &--#{$i} span:nth-child(-n + #{$i}) { background: $color; }
+  }
+}
+
+@keyframes shake {
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+}

@@ -1,0 +1,26 @@
+// Палітра: темний пергамент, золото, кров’яно-червоний, синьо-жовтий акцент
+$c-bg: #0d0b09;
+$c-bg-2: #15120e;
+$c-surface: rgba(255, 255, 255, 0.04);
+$c-line: rgba(233, 220, 196, 0.14);
+$c-text: #ece3d2;
+$c-muted: #a89c88;
+$c-gold: #c9a24a;
+$c-gold-light: #f3d27a;
+$c-red: #9b2c1c;
+$c-blue: #1f5bb5;
+$c-yellow: #e0b400;
+$c-error: #e0664f;
+
+$f-serif: 'Cormorant Garamond', Georgia, serif;
+$f-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+$header-h: 84px;
+$radius: 14px;
+$ease: cubic-bezier(0.65, 0, 0.35, 1);
+
+$bp: (
+  sm: 560px,
+  md: 900px,
+  lg: 1200px
+);

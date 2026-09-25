@@ -1,0 +1,49 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.auth {
+  position: relative;
+  min-height: 100vh;
+  padding: calc(#{$header-h} + 50px) 0 80px;
+
+  &__bg { position: fixed; z-index: 0; }
+
+  &__layout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 40px;
+    align-items: center;
+    @include up(md) { grid-template-columns: 1fr 1.15fr; gap: 70px; }
+  }
+
+  &__perks {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: grid;
+    gap: 14px;
+
+    li {
+      position: relative;
+      padding-left: 30px;
+      color: rgba($c-text, 0.85);
+
+      &::before {
+        content: '✦';
+        position: absolute;
+        left: 0;
+        color: $c-gold;
+      }
+    }
+  }
+
+  &__card {
+    @include glass;
+    border-radius: 24px;
+    padding: clamp(24px, 4vw, 40px);
+
+    .chips { margin: 4px 0 12px; }
+    .btn { margin-top: 12px; }
+  }
+}

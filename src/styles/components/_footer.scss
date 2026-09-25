@@ -1,0 +1,35 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.footer {
+  background: $c-bg-2;
+  border-top: 1px solid $c-line;
+  padding-top: 70px;
+
+  &__grid {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 1fr;
+
+    @include up(sm) { grid-template-columns: repeat(2, 1fr); }
+    @include up(md) { grid-template-columns: 1.4fr repeat(3, 1fr); }
+
+    > div { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+
+  &__brand { @include serif-title(2rem); color: $c-gold; }
+  &__title { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; color: $c-gold; margin-bottom: 6px; }
+  &__muted { color: $c-muted; font-size: 0.92rem; }
+
+  &__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 60px;
+    padding-block: 24px;
+    border-top: 1px solid $c-line;
+    font-size: 0.85rem;
+    color: $c-muted;
+  }
+}
