@@ -1,5 +1,5 @@
 import Link from '../components/Link.jsx';
-import { openingHours } from '../data/prices.js';
+import { openingHours, contacts, tel } from '../data/prices.js';
 
 export default function Footer() {
   return (
@@ -7,7 +7,12 @@ export default function Footer() {
       <div className="container footer__grid">
         <div>
           <p className="footer__brand">Від Русі до України</p>
-          <p className="footer__muted">Історичний музей<br />м. Кам’янець-Подільський</p>
+          <p className="footer__muted">Кам’янець крізь віки<br />{contacts.address}</p>
+          <p className="socials">
+            {contacts.socials.map((s) => (
+              <a key={s.label} className="link-fx" href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
+            ))}
+          </p>
         </div>
         <div>
           <p className="footer__title">Відвідувачам</p>
@@ -25,11 +30,12 @@ export default function Footer() {
         <div>
           <p className="footer__title">Години роботи</p>
           <p className="footer__muted">{openingHours}</p>
-          <a className="link-fx" href="tel:+380380000000">+38 (038) 000-00-00</a>
+          <a className="link-fx" href={tel(contacts.phone)}>{contacts.phone}</a>
+          <a className="link-fx" href={`mailto:${contacts.email}`}>{contacts.email}</a>
         </div>
       </div>
       <div className="container footer__bottom">
-        <span>© {new Date().getFullYear()} Музей «Від Русі до України»</span>
+        <span>© {new Date().getFullYear()} Музей «{contacts.name}»</span>
         <span>Слава Україні!</span>
       </div>
     </footer>

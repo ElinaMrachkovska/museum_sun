@@ -3,7 +3,7 @@ import { gsap, useGSAP } from '../gsap.js';
 import VideoBg from './VideoBg.jsx';
 
 // Банер внутрішніх сторінок з відеофоном та анімацією заголовка.
-export default function PageHero({ kicker, title, text, video, palette }) {
+export default function PageHero({ kicker, title, text, video, image, palette }) {
   const ref = useRef(null);
 
   useGSAP(
@@ -25,7 +25,7 @@ export default function PageHero({ kicker, title, text, video, palette }) {
 
   return (
     <section ref={ref} className="page-hero">
-      <VideoBg src={video} palette={palette} />
+      <VideoBg src={video} image={image} palette={palette} />
       <div className="container page-hero__content">
         <p className="page-hero__kicker">{kicker}</p>
         <h1 className="page-hero__title">

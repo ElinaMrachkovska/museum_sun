@@ -8,6 +8,17 @@ import { tickets, sessionTimes as times } from '../data/prices.js';
 import { isEmail, isPhone, minLen, todayISO, isLastTuesday, nextLastTuesday, formatDate } from '../utils/validators.js';
 import { api, goToPayment } from '../utils/api.js';
 
+// Картки цін: сімейні квитки об’єднано в одну картку
+const byId = Object.fromEntries(tickets.map((t) => [t.id, t]));
+const priceCards = [
+  { key: 'adult', ...byId.adult },
+  { key: 'youth', ...byId.youth },
+  { key: 'family', label: 'Сімейні', options: tickets.filter((t) => t.group === 'family') },
+  { key: 'social', ...byId.social },
+  { key: 'lastTuesday', ...byId.lastTuesday, accent: true },
+  { key: 'free', ...byId.free }
+];
+
 const paymentOptions = [
   { id: 'liqpay', label: 'LiqPay', hint: 'картка, Apple Pay, Google Pay, Приват24' },
   { id: 'monobank', label: 'Monobank', hint: 'картка, Apple Pay, Google Pay' },
@@ -22,7 +33,7 @@ const initial = {
   time: '',
   payment: 'liqpay',
   agree: false,
-  ...Object.fromEntries(tickets.map((t) => [t.id, t.id === 'full' ? 1 : 0]))
+  ...Object.fromEntries(tickets.map((t) => [t.id, t.id === 'adult' ? 1 : 0]))
 };
 
 const validate = (v) => {
@@ -134,17 +145,32 @@ export default function Tickets() {
         <p className="section-kicker">Вартість</p>
         <h2 className="section-title">Ціни на квитки</h2>
         <div className="prices__grid">
-          {tickets.map((t) => (
-            <article key={t.id} className={`price-card ${t.lastTuesdayOnly ? 'price-card--social' : ''}`}>
-              <h3 className="price-card__label">{t.label}</h3>
-              <p className="price-card__price">{t.price}<span> ₴</span></p>
-              <p className="price-card__note">{t.note}</p>
-              {t.categories && (
+          {priceCards.map((c) => (
+            <article key={c.key} className={`price-card ${c.accent ? 'price-card--social' : ''}`}>
+              <h3 className="price-card__label">{c.label}</h3>
+              {c.options ? (
+                <ul className="price-card__options">
+                  {c.options.map((o) => (
+                    <li key={o.id}>
+                      <span>{o.note}</span>
+                      <strong>{o.price} ₴</strong>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <>
+                  <p className={`price-card__price ${c.price ? '' : 'price-card__price--free'}`}>
+                    {c.price ? <>{c.price}<span> ₴</span></> : 'Безкоштовно'}
+                  </p>
+                  <p className="price-card__note">{c.note}</p>
+                </>
+              )}
+              {c.categories && (
                 <ul className="price-card__list">
-                  {t.categories.map((c) => <li key={c}>{c}</li>)}
+                  {c.categories.map((cat) => <li key={cat}>{cat}</li>)}
                 </ul>
               )}
-              {t.lastTuesdayOnly && nearestLastTuesday && (
+              {c.lastTuesdayOnly && nearestLastTuesday && (
                 <p className="price-card__date">Найближчий: <strong>{formatDate(nearestLastTuesday)}</strong></p>
               )}
             </article>
@@ -163,7 +189,7 @@ export default function Tickets() {
                 <div className={`ticket-row ${locked ? 'is-locked' : ''}`} key={t.id}>
                   <div>
                     <p className="ticket-row__label">{t.label}</p>
-                    <p className="ticket-row__price">{t.price} ₴</p>
+                    <p className="ticket-row__price">{t.price ? `${t.price} ₴` : 'Безкоштовно'}</p>
                     <p className="ticket-row__note">
                       {locked && nearestLastTuesday ? (
                         <>

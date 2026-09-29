@@ -3,20 +3,22 @@ import Link from '../components/Link.jsx';
 import { gsap, useGSAP } from '../gsap.js';
 import PageHero from '../components/PageHero.jsx';
 import useReveal from '../hooks/useReveal.js';
-import { tickets, openingHours } from '../data/prices.js';
+import { tickets, openingHours, contacts } from '../data/prices.js';
 
+// Цифри — з сайту ukr-museum.org та плаката проєкту «Музеї нації»
 const stats = [
-  { value: 12000, label: 'експонатів у фондах' },
-  { value: 7, label: 'історичних залів' },
-  { value: 1100, label: 'років історії' },
-  { value: 45000, label: 'відвідувачів щороку' }
+  { value: 1000, label: 'років історії державності' },
+  { value: 19, label: 'експозицій' },
+  { value: 40, label: 'аудіогідів' },
+  { value: 8, label: 'мов аудіогіда' }
 ];
 
-const milestones = [
-  { year: '1890', text: 'Подільський єпархіальний історико-статистичний комітет збирає першу колекцію старожитностей краю.' },
-  { year: '1920', text: 'Колекції передано під опіку українського університету в Кам’янці.' },
-  { year: '1991', text: 'Після відновлення незалежності фонди поповнюються документами доби УНР.' },
-  { year: '2026', text: 'Відкрито оновлену мультимедійну експозицію «Від Русі до України».' }
+// Мережа «Музеї нації» — одна місія, 4 локації
+const network = [
+  { city: 'Київ', name: 'Музей «Становлення української нації»', text: 'Шлях від Трипілля, Київської Русі до сучасної України.' },
+  { city: 'Львів', name: 'Музей «Львів стародавній»', text: 'Історія Королівства Руського та середньовічного Львова.' },
+  { city: 'Кам’янець-Подільський', name: 'Музей «Від Русі до України. Кам’янець крізь віки»', text: '1000-літня історія державності та таємниці Кам’янця.', current: true },
+  { city: 'с. Гатне (Київщина)', name: 'Фортеця Гетьмана', text: 'Історико-культурний комплекс козацької доби.' }
 ];
 
 export default function About() {
@@ -37,7 +39,7 @@ export default function About() {
         });
       });
 
-      gsap.utils.toArray('.milestone').forEach((m, i) => {
+      gsap.utils.toArray('.network-card').forEach((m, i) => {
         gsap.from(m, {
           x: i % 2 ? 80 : -80,
           opacity: 0,
@@ -54,7 +56,7 @@ export default function About() {
         kicker="Про музей"
         title="Місто-фортеця пам’ятає"
         text="Музей у серці Старого міста Кам’янця-Подільського розповідає про тяглість української державності."
-        video="/videos/about.mp4"
+        image="/gallery/fasad-muzeiu.jpg"
         palette={['#1a1612', '#5d4520', '#0b0907']}
       />
 
@@ -65,8 +67,8 @@ export default function About() {
         </div>
         <div className="about-intro__text" data-reveal="0.15">
           <p>
-            Ми зберігаємо та досліджуємо пам’ятки від часів Київської Русі до сьогодення. Експозиція побудована
-            як подорож крізь епохи: кожен зал — окрема глава, де артефакти, відео та звук створюють відчуття присутності.
+            Сучасний історичний музей про шлях України й Кам’янця крізь віки: 19 експозицій, діорами, реалістичні
+            фігури історичних постатей, VR, артефакти, проєкції та аудіогіди. Кожен зал — окрема глава тисячолітньої історії.
           </p>
           <p>
             Особливе місце займає історія самого Кам’янця — міста, яке було фортецею Коріатовичів, османським
@@ -88,13 +90,19 @@ export default function About() {
       </section>
 
       <section className="container section">
-        <p className="section-kicker" data-reveal>Історія музею</p>
-        <h2 className="section-title" data-reveal>Віхи</h2>
-        <div className="milestones">
-          {milestones.map((m) => (
-            <div className="milestone" key={m.year}>
-              <span className="milestone__year">{m.year}</span>
+        <p className="section-kicker" data-reveal>Історико-освітній проєкт</p>
+        <h2 className="section-title" data-reveal>«Музеї нації» — одна місія, 4 локації</h2>
+        <p className="network-lead" data-reveal>
+          Сучасні музейні простори, де історія оживає завдяки фігурам, діорамам, артефактам, мультимедіа, VR,
+          аудіогідам та інтерактивам.
+        </p>
+        <div className="network">
+          {network.map((m) => (
+            <div className={`network-card ${m.current ? 'network-card--current' : ''}`} key={m.name}>
+              <span className="network-card__city">{m.city}</span>
+              <h3>{m.name}</h3>
               <p>{m.text}</p>
+              {m.current && <span className="network-card__badge">Ви тут</span>}
             </div>
           ))}
         </div>
@@ -108,22 +116,23 @@ export default function About() {
         <div>
           <h3>Вартість</h3>
           <p>
-            {tickets.map((t) => (
+            {tickets.filter((t) => t.featured).map((t) => (
               <span key={t.id}>
-                {t.label} — {t.price} ₴{t.lastTuesdayOnly ? ' (останній вівторок місяця)' : ''}
+                {t.label} — {t.price} ₴
                 <br />
               </span>
             ))}
+            Сімейні — від {Math.min(...tickets.filter((t) => t.group === 'family').map((t) => t.price))} ₴
           </p>
           <Link to="/tickets" className="link-fx link-arrow">Пільги та купівля квитків →</Link>
         </div>
         <div>
           <h3>Адреса</h3>
-          <p>м. Кам’янець-Подільський,<br />Старе місто, вул. Замкова</p>
+          <p>{contacts.address}</p>
         </div>
         <div>
-          <h3>Доступність</h3>
-          <p>Пандус, ліфт до другого поверху, аудіогід для людей з порушенням зору.</p>
+          <h3>Аудіогіди</h3>
+          <p>40 аудіогідів 8 мовами. Групові візити: <a className="link-fx" href={`tel:${contacts.groupsPhone.replace(/[^\d+]/g, '')}`}>{contacts.groupsPhone}</a></p>
         </div>
       </section>
     </div>

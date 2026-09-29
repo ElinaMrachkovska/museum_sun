@@ -5,7 +5,10 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(#{$header-h} + 16px); // якорі та фокус не ховаються під шапкою
+}
 
 body {
   margin: 0;

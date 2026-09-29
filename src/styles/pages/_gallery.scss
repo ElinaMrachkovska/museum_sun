@@ -2,6 +2,17 @@
 @use '../mixins' as *;
 
 .gallery {
+  &__photos-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+
+    .reels__title { margin-bottom: 0; }
+  }
+
   &__head {
     display: flex;
     flex-wrap: wrap;
@@ -158,4 +169,97 @@
   @include down(md) {
     &__nav { top: auto; bottom: 16px; margin-top: 0; }
   }
+}
+
+// ---------- Вертикальні відео («сторіз»)
+.reels {
+  margin-bottom: 50px;
+
+  &__title {
+    @include serif-title(clamp(1.8rem, 3.5vw, 2.4rem));
+    margin-bottom: 18px;
+  }
+
+  &__track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
+  }
+}
+
+.reel {
+  position: relative;
+  flex: none;
+  width: min(62vw, 260px);
+  aspect-ratio: 9 / 16;
+  padding: 0;
+  border: 1px solid $c-line;
+  border-radius: 20px;
+  overflow: hidden;
+  background: $c-bg-2;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: border-color 0.4s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s $ease;
+  }
+
+  &::after {
+    content: '';
+    @include cover;
+    background: linear-gradient(180deg, transparent 45%, rgba($c-bg, 0.9));
+  }
+
+  &__play {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    padding-left: 4px;
+    font-size: 1.3rem;
+    color: $c-bg;
+    background: rgba($c-gold-light, 0.92);
+    box-shadow: 0 0 0 8px rgba($c-gold, 0.25);
+    transition: box-shadow 0.4s ease, background 0.4s ease;
+  }
+
+  &__meta {
+    position: absolute;
+    z-index: 1;
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+
+    strong { font-weight: 500; font-size: 0.95rem; line-height: 1.3; }
+    em { font-style: normal; font-size: 0.8rem; color: $c-gold; }
+  }
+
+  &:hover,
+  &:focus-visible {
+    border-color: $c-gold;
+    img { transform: scale(1.05); }
+    .reel__play { background: $c-gold-light; box-shadow: 0 0 0 14px rgba($c-gold, 0.2); }
+  }
+}
+
+.lightbox--video .lightbox__img {
+  max-height: calc(100vh - 140px);
+  width: auto;
+  background: #000;
 }

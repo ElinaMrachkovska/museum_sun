@@ -98,7 +98,8 @@ npm run deploy
 ## Ціни, години, фото
 
 - Ціни, пільгові категорії та сеанси — `src/data/prices.js` **і** `server/src/catalog.js` (сервер рахує суму, тримайте однаковими).
-- Фото галереї — у `public/gallery/`, список — `src/data/gallery.js`.
+- Фото галереї — у `public/gallery/` (мініатюри — `thumbs/`), відео — `public/videos/muzei-*.mp4`, список — `src/data/gallery.js`.
+- Ціни, пільги й контакти взято з [ukr-museum.org](https://ukr-museum.org) (сторінки «Квитки», «Правила відвідування», «Контакти»).
 
 ## Відео
 

@@ -197,7 +197,8 @@
   &__grid {
     display: grid;
     gap: 20px;
-    @include up(md) { grid-template-columns: repeat(3, 1fr); }
+    @include up(sm) { grid-template-columns: repeat(2, 1fr); }
+    @include up(lg) { grid-template-columns: repeat(3, 1fr); }
   }
 
   &__hint { margin-top: 20px; color: $c-muted; font-size: 0.9rem; }
@@ -227,9 +228,31 @@
     @include serif-title(3.6rem);
     color: $c-text;
     span { font-size: 1.8rem; color: $c-gold; }
+
+    &--free { font-size: 2.4rem; color: $c-gold-light; padding: 0.35em 0; }
   }
 
   &__note { color: rgba($c-text, 0.85); }
+
+  &__options {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed $c-line;
+      color: rgba($c-text, 0.85);
+    }
+
+    strong { @include serif-title(1.9rem); color: $c-text; white-space: nowrap; }
+  }
 
   &__list {
     margin: 4px 0 0;

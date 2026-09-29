@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { gsap, ScrollTrigger, useGSAP } from '../gsap.js';
 import PageHero from '../components/PageHero.jsx';
-import { photos } from '../data/gallery.js';
+import { photos, videos, categoryOrder } from '../data/gallery.js';
 import { url } from '../utils/url.js';
 
 // Форма плитки в мозаїці залежно від пропорцій фото
@@ -17,9 +17,14 @@ export default function Gallery() {
   const boxRef = useRef(null);
   const [filter, setFilter] = useState('Усі');
   const [open, setOpen] = useState(-1); // індекс відкритого фото
+  const [video, setVideo] = useState(-1); // індекс відкритого відео
+  const videoBoxRef = useRef(null);
   const touch = useRef(null);
 
-  const categories = useMemo(() => ['Усі', ...new Set(photos.map((p) => p.category).filter(Boolean))], []);
+  const categories = useMemo(() => {
+    const present = new Set(photos.map((p) => p.category).filter(Boolean));
+    return ['Усі', ...categoryOrder.filter((c) => present.has(c)), ...[...present].filter((c) => !categoryOrder.includes(c))];
+  }, []);
   const list = useMemo(() => (filter === 'Усі' ? photos : photos.filter((p) => p.category === filter)), [filter]);
 
   // Поява плиток під час скролу: «шторка» відкриває фото
@@ -80,6 +85,29 @@ export default function Gallery() {
     };
   }, [open >= 0]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Перегляд відео: зі звуком, закриття Esc
+  const closeVideo = useCallback(() => {
+    const box = videoBoxRef.current;
+    box?.querySelector('video')?.pause();
+    if (!box) return setVideo(-1);
+    gsap.to(box, { opacity: 0, duration: 0.3, onComplete: () => setVideo(-1) });
+  }, []);
+
+  useEffect(() => {
+    if (video < 0) return undefined;
+    document.body.classList.add('no-scroll');
+    const box = videoBoxRef.current;
+    gsap.fromTo(box, { opacity: 0 }, { opacity: 1, duration: 0.35 });
+    gsap.fromTo(box.querySelector('.lightbox__figure'), { scale: 0.92, y: 20 }, { scale: 1, y: 0, duration: 0.6, ease: 'power3.out' });
+    box.querySelector('.lightbox__close')?.focus();
+    const onKey = (e) => e.key === 'Escape' && closeVideo();
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.classList.remove('no-scroll');
+    };
+  }, [video >= 0]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Свайп на телефоні
   const onTouchStart = (e) => (touch.current = e.touches[0].clientX);
   const onTouchEnd = (e) => {
@@ -97,7 +125,7 @@ export default function Gallery() {
         kicker="Фотогалерея"
         title="Музей у кадрі"
         text="Зали, експонати й події музею — погляньте, що чекає на вас у Кам’янці."
-        video="/videos/gallery.mp4"
+        image="/gallery/obloha-1672.jpg"
         palette={['#161310', '#5a3d1e', '#0a0806']}
       />
 
@@ -112,8 +140,31 @@ export default function Gallery() {
           <>
             <div className="gallery__head">
               <p className="gallery__count">
-                <strong>{String(list.length).padStart(2, '0')}</strong> фото
+                <strong>{String(photos.length).padStart(2, '0')}</strong> фото
+                {videos.length > 0 && <> · <strong>{String(videos.length).padStart(2, '0')}</strong> відео</>}
               </p>
+            </div>
+
+            {videos.length > 0 && (
+              <div className="reels">
+                <h2 className="reels__title">Відео</h2>
+                <div className="reels__track">
+                  {videos.map((v, i) => (
+                    <button key={v.src} type="button" className="reel" onClick={() => setVideo(i)} aria-label={`Дивитися відео: ${v.title}`}>
+                      <img src={url(v.poster)} alt="" width={v.width} height={v.height} loading="lazy" decoding="async" />
+                      <span className="reel__play" aria-hidden="true">▶</span>
+                      <span className="reel__meta">
+                        <strong>{v.title}</strong>
+                        <em>{v.duration}</em>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="gallery__photos-head">
+              <h2 className="reels__title">Фото</h2>
               {categories.length > 2 && (
                 <div className="filters" role="tablist">
                   {categories.map((c) => (
@@ -124,7 +175,6 @@ export default function Gallery() {
                 </div>
               )}
             </div>
-
             <div className="mosaic">
               {list.map((p, i) => (
                 <button key={p.src} type="button" className={`tile tile--${tileShape(p)}`} onClick={() => setOpen(i)} aria-label={`Відкрити фото: ${p.alt}`}>
@@ -141,6 +191,19 @@ export default function Gallery() {
           </>
         )}
       </section>
+
+      {video >= 0 && (
+        <div ref={videoBoxRef} className="lightbox lightbox--video" role="dialog" aria-modal="true" aria-label={videos[video].title} onClick={(e) => e.target === e.currentTarget && closeVideo()}>
+          <button type="button" className="lightbox__close" onClick={closeVideo} aria-label="Закрити">✕</button>
+          <figure className="lightbox__figure">
+            <video className="lightbox__img" src={url(videos[video].src)} poster={url(videos[video].poster)} width={videos[video].width} height={videos[video].height} controls autoPlay playsInline />
+            <figcaption className="lightbox__caption">
+              <span>{videos[video].title}</span>
+              <span className="lightbox__counter">{videos[video].duration}</span>
+            </figcaption>
+          </figure>
+        </div>
+      )}
 
       {current && (
         <div ref={boxRef} className="lightbox" role="dialog" aria-modal="true" aria-label={current.alt} onClick={(e) => e.target === e.currentTarget && close()} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>

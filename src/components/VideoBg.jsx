@@ -6,7 +6,8 @@ const withBase = (path) => (path ? url(path) : path);
 
 // Відеофон. Якщо файлу немає або він не завантажився —
 // показується анімований «вогняний» фон у кольорах розділу.
-const VideoBg = forwardRef(function VideoBg({ src, poster, palette = [], playing = true, className = '' }, ref) {
+// image — статичне фото замість відео (наприклад, фасад музею)
+const VideoBg = forwardRef(function VideoBg({ src, poster, image, palette = [], playing = true, className = '' }, ref) {
   const videoRef = useRef(null);
   const [failed, setFailed] = useState(false);
 
@@ -31,10 +32,11 @@ const VideoBg = forwardRef(function VideoBg({ src, poster, palette = [], playing
   return (
     <div
       ref={ref}
-      className={`video-bg ${failed ? 'video-bg--fallback' : ''} ${className}`}
+      className={`video-bg ${failed && !image ? 'video-bg--fallback' : ''} ${className}`}
       style={{ '--c1': c1, '--c2': c2, '--c3': c3 }}
     >
-      {!failed && (
+      {image && <img className="video-bg__video" src={withBase(image)} alt="" aria-hidden="true" />}
+      {!image && !failed && (
         <video
           ref={videoRef}
           className="video-bg__video"

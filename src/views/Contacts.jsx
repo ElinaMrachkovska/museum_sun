@@ -7,7 +7,9 @@ import useForm from '../hooks/useForm.js';
 import useReveal from '../hooks/useReveal.js';
 import { isEmail, minLen } from '../utils/validators.js';
 import { api } from '../utils/api.js';
-import { openingHours } from '../data/prices.js';
+import { openingHours, contacts, tel } from '../data/prices.js';
+
+const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent('Кам’янець-Подільський, площа Польський ринок, 19')}&z=17&output=embed`;
 
 const topics = ['Загальне питання', 'Групова екскурсія', 'Співпраця / волонтерство', 'Передати експонат', 'Преса'];
 
@@ -66,24 +68,36 @@ export default function Contacts() {
         <div className="contacts__info">
           <div className="contact-item">
             <span className="contact-item__label">Адреса</span>
-            <p>м. Кам’янець-Подільський, Старе місто, вул. Замкова</p>
+            <p>{contacts.address}</p>
           </div>
           <div className="contact-item">
-            <span className="contact-item__label">Телефон</span>
-            <a className="link-fx" href="tel:+380380000000">+38 (038) 000-00-00</a>
+            <span className="contact-item__label">Адміністрація</span>
+            <a className="link-fx" href={tel(contacts.phone)}>{contacts.phone}</a>
+          </div>
+          <div className="contact-item">
+            <span className="contact-item__label">Групові візити та партнерство</span>
+            <a className="link-fx" href={tel(contacts.groupsPhone)}>{contacts.groupsPhone}</a>
           </div>
           <div className="contact-item">
             <span className="contact-item__label">E-mail</span>
-            <a className="link-fx" href="mailto:info@rus-ukraine.museum">info@rus-ukraine.museum</a>
+            <a className="link-fx" href={`mailto:${contacts.email}`}>{contacts.email}</a>
           </div>
           <div className="contact-item">
             <span className="contact-item__label">Години</span>
             <p>{openingHours}</p>
           </div>
+          <div className="contact-item">
+            <span className="contact-item__label">Соцмережі</span>
+            <p className="socials">
+              {contacts.socials.map((s) => (
+                <a key={s.label} className="link-fx" href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
+              ))}
+            </p>
+          </div>
           <div className="map" data-reveal>
             <iframe
-              title="Карта: Стара фортеця, Кам'янець-Подільський"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=26.5635%2C48.6695%2C26.5775%2C48.6765&layer=mapnik&marker=48.6730%2C26.5705"
+              title="Карта: площа Польський ринок, 19, Кам’янець-Подільський"
+              src={mapSrc}
               loading="lazy"
             />
           </div>
