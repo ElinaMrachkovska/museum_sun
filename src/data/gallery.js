@@ -19,7 +19,7 @@ export const photos = [
     "height": 1600,
     "alt": "Фігура Володимира Великого на тлі сцени хрещення",
     "caption": "Володимир Великий — хреститель Русі",
-    "category": "Княжа доба"
+    "category": "Русь"
   },
   {
     "src": "/gallery/korol-rusi.jpg",
@@ -27,8 +27,8 @@ export const photos = [
     "width": 900,
     "height": 1600,
     "alt": "Фігура правителя в короні та червоному вбранні",
-    "caption": "Правитель у короні — княжа доба",
-    "category": "Княжа доба"
+    "caption": "Зал «Королівство Руське»",
+    "category": "Королівство Руське"
   },
   {
     "src": "/gallery/knyazha-doba.jpg",
@@ -36,8 +36,8 @@ export const photos = [
     "width": 900,
     "height": 1600,
     "alt": "Фігура воїна з чуприною в жовтому каптані",
-    "caption": "Воїн княжої доби",
-    "category": "Княжа доба"
+    "caption": "Зал «Русь» — воїн княжої доби",
+    "category": "Русь"
   },
   {
     "src": "/gallery/lytovska-doba-hramota.jpg",
@@ -45,8 +45,8 @@ export const photos = [
     "width": 900,
     "height": 1600,
     "alt": "Фігура воїна в кольчужному каптурі з грамотою",
-    "caption": "Грамота на тлі Кам’янецької фортеці",
-    "category": "Литовсько-руська доба"
+    "caption": "Зал «Велике князівство Литовське і Руське»",
+    "category": "Велике князівство Литовське і Руське"
   },
   {
     "src": "/gallery/korol-rusi-profil.jpg",
@@ -54,8 +54,8 @@ export const photos = [
     "width": 900,
     "height": 1600,
     "alt": "Фігура правителя в короні, вигляд збоку",
-    "caption": "Правитель у короні — профіль",
-    "category": "Княжа доба"
+    "caption": "Зал «Королівство Руське» — правитель у короні",
+    "category": "Королівство Руське"
   },
   {
     "src": "/gallery/rich-pospolyta.jpg",
@@ -73,7 +73,7 @@ export const photos = [
     "height": 1600,
     "alt": "Діорама облоги Кам’янецької фортеці",
     "caption": "Облога Кам’янця 1672 року",
-    "category": "Козацька доба"
+    "category": "Річ Посполита"
   },
   {
     "src": "/gallery/kozatska-doba.jpg",
@@ -82,7 +82,7 @@ export const photos = [
     "height": 1600,
     "alt": "Фігура козака в червоному плащі на тлі дерев’яної фортеці",
     "caption": "Козацька старшина",
-    "category": "Козацька доба"
+    "category": "Козацька держава"
   },
   {
     "src": "/gallery/kozatska-derzhava.jpg",
@@ -91,7 +91,7 @@ export const photos = [
     "height": 1600,
     "alt": "Фігура в лавровому вінку біля інформаційних стендів",
     "caption": "Зала «Козацька держава»",
-    "category": "Козацька доба"
+    "category": "Козацька держава"
   },
   {
     "src": "/gallery/xviii-stolittia.jpg",
@@ -99,8 +99,8 @@ export const photos = [
     "width": 1200,
     "height": 1600,
     "alt": "Фігура у синьому мундирі на тлі кам’яної стіни",
-    "caption": "Кам’янець у XVIII столітті",
-    "category": "XVIII століття"
+    "caption": "Кам’янець у XVIII столітті — доба Речі Посполитої",
+    "category": "Річ Посполита"
   },
   {
     "src": "/gallery/xviii-stolittia-portret.jpg",
@@ -109,7 +109,7 @@ export const photos = [
     "height": 1600,
     "alt": "Обличчя фігури в білій перуці крупним планом",
     "caption": "Реалістичні фігури музею — портрет",
-    "category": "XVIII століття"
+    "category": "Річ Посполита"
   },
   {
     "src": "/gallery/imperska-doba.jpg",
@@ -135,8 +135,8 @@ export const photos = [
     "width": 1200,
     "height": 1600,
     "alt": "Фігура у військовому однострої з тризубами на комірі",
-    "caption": "Доба Української революції",
-    "category": "Українська революція"
+    "caption": "Зал «Українська Народна Республіка»",
+    "category": "Українська Народна Республіка"
   },
   {
     "src": "/gallery/mytropolyt.jpg",
@@ -144,8 +144,8 @@ export const photos = [
     "width": 1200,
     "height": 1600,
     "alt": "Фігура священнослужителя в білій митрі",
-    "caption": "Духовенство у ХХ столітті",
-    "category": "ХХ століття"
+    "caption": "Зал «Українська РСР»",
+    "category": "Українська РСР"
   },
   {
     "src": "/gallery/interaktyvna-mapa.jpg",
@@ -153,8 +153,8 @@ export const photos = [
     "width": 900,
     "height": 1600,
     "alt": "Відвідувачка біля інтерактивного стенду з мапою України",
-    "caption": "Інтерактивна експозиція",
-    "category": "Музей"
+    "caption": "Зал «Сучасна Україна» — інтерактивна мапа",
+    "category": "Сучасна Україна"
   },
   {
     "src": "/gallery/komanda-muzeiu.jpg",
@@ -215,13 +215,14 @@ export const videos = [
 
 // Порядок фільтрів — за хронологією
 export const categoryOrder = [
-  'Княжа доба',
-  'Литовсько-руська доба',
+  'Русь',
+  'Королівство Руське',
+  'Велике князівство Литовське і Руське',
   'Річ Посполита',
-  'Козацька доба',
-  'XVIII століття',
+  'Козацька держава',
   'Імперська доба',
-  'Українська революція',
-  'ХХ століття',
+  'Українська Народна Республіка',
+  'Українська РСР',
+  'Сучасна Україна',
   'Музей'
 ];

@@ -3,7 +3,8 @@ import Link from '../components/Link.jsx';
 import { gsap, ScrollTrigger, useGSAP } from '../gsap.js';
 import VideoBg from '../components/VideoBg.jsx';
 import useReveal from '../hooks/useReveal.js';
-import { eras, heroVideo, exhibitions } from '../data/eras.js';
+import { eras, heroVideo } from '../data/eras.js';
+import { url } from '../utils/url.js';
 
 const heroTitle = ['Від', 'Русі', 'до', 'України'];
 
@@ -53,6 +54,7 @@ export default function Home() {
         tl.from(panel.querySelector('.era__years'), { x: -80, opacity: 0 })
           .from(panel.querySelector('.era__title'), { y: 60, opacity: 0 }, '<0.1')
           .from(panel.querySelector('.era__lead'), { y: 40, opacity: 0 }, '<0.1')
+          .from(panel.querySelector('.era__motto'), { y: 40, opacity: 0 }, '<0.1')
           .from(panel.querySelector('.era__text'), { y: 40, opacity: 0 }, '<0.1')
           .from(panel.querySelectorAll('.era__facts li'), { x: 40, opacity: 0, stagger: 0.1 }, '<0.1');
       });
@@ -151,6 +153,7 @@ export default function Home() {
               ref={(el) => (layers.current[i] = el)}
               className="history__layer"
               src={era.video}
+              image={era.video ? undefined : era.image}
               palette={era.palette}
               playing={i === active}
             />
@@ -173,9 +176,16 @@ export default function Home() {
           {eras.map((era) => (
             <article className="era" key={era.id} id={`era-${era.id}`}>
               <div className="container era__inner">
-                <p className="era__years">{era.years}</p>
+                <p className="era__years">
+                  {era.years}
+                  <span>{era.duration}</span>
+                </p>
                 <h2 className="era__title">{era.title}</h2>
                 <p className="era__lead">{era.lead}</p>
+                <blockquote className="era__motto">
+                  <p>«{era.motto}»</p>
+                  <cite>{era.figure}</cite>
+                </blockquote>
                 <p className="era__text">{era.text}</p>
                 <ul className="era__facts">
                   {era.facts.map((f) => (
@@ -195,13 +205,14 @@ export default function Home() {
           <h2 className="section-title">Зали музею</h2>
         </div>
         <div className="showcase__track">
-          {exhibitions.map((ex, i) => (
-            <Link to="/exhibitions" className="showcase__card" key={ex.id}>
+          {eras.map((ex, i) => (
+            <Link to={`/exhibitions#${ex.id}`} className="showcase__card" key={ex.id}>
+              <img className="showcase__img" src={url(ex.photo)} alt="" loading="lazy" decoding="async" />
               <span className="showcase__num">{String(i + 1).padStart(2, '0')}</span>
-              <span className="showcase__tag">{ex.tag}</span>
+              <span className="showcase__tag">{ex.duration}</span>
               <h3>{ex.title}</h3>
-              <p className="showcase__period">{ex.period}</p>
-              <p>{ex.text}</p>
+              <p className="showcase__period">{ex.years}</p>
+              <p>«{ex.motto}»</p>
               <span className="showcase__more">Детальніше →</span>
             </Link>
           ))}
