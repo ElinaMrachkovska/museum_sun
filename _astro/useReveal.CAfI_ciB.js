@@ -1,0 +1,1 @@
+import{u as a,g as e,S as s}from"./gsap.DaTBDgHM.js";function u(t){a(()=>{e.utils.toArray("[data-reveal]").forEach(r=>{e.from(r,{y:50,opacity:0,duration:1,delay:Number(r.dataset.reveal)||0,scrollTrigger:{trigger:r,start:"top 88%",once:!0}})}),s.refresh()},{scope:t})}export{u};
