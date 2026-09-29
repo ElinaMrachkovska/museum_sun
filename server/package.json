@@ -1,0 +1,21 @@
+{
+  "name": "museum-server",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Бекенд музею «Від Русі до України»: Node.js + Express + Astra DB + LiqPay + Monobank",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@datastax/astra-db-ts": "^2.3.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1"
+  }
+}

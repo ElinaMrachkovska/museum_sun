@@ -11,21 +11,3 @@ export const todayISO = () => {
 
 // Робочі дні музею: вівторок – неділя (понеділок — вихідний).
 export const isMonday = (iso) => new Date(`${iso}T12:00:00`).getDay() === 1;
-
-export const storage = {
-  get(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : fallback;
-    } catch {
-      return fallback;
-    }
-  },
-  set(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      /* сховище недоступне — ігноруємо */
-    }
-  }
-};

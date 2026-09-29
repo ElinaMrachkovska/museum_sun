@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
+import { url } from '../utils/url.js';
 
-// Додає базовий шлях сайту (для GitHub Pages: /museum_sun/) до шляхів з public/
-const withBase = (path) => (path?.startsWith('/') ? import.meta.env.BASE_URL + path.slice(1) : path);
+// Додає базовий шлях сайту (для GitHub Pages: /museum_sun) до шляхів з public/
+const withBase = (path) => (path ? url(path) : path);
 
 // Відеофон. Якщо файлу немає або він не завантажився —
 // показується анімований «вогняний» фон у кольорах розділу.

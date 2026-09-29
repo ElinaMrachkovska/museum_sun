@@ -5,7 +5,8 @@ import Field from '../components/Field.jsx';
 import SuccessModal from '../components/SuccessModal.jsx';
 import useForm from '../hooks/useForm.js';
 import useReveal from '../hooks/useReveal.js';
-import { isEmail, minLen, storage } from '../utils/validators.js';
+import { isEmail, minLen } from '../utils/validators.js';
+import { api } from '../utils/api.js';
 
 const topics = ['Загальне питання', 'Групова екскурсія', 'Співпраця / волонтерство', 'Передати експонат', 'Преса'];
 
@@ -24,6 +25,8 @@ const validate = (v) => {
 export default function Contacts() {
   const root = useRef(null);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [serverError, setServerError] = useState('');
   const form = useForm(initial, validate);
   const { values, onChange, onBlur, fieldError } = form;
   useReveal(root);
@@ -35,9 +38,17 @@ export default function Contacts() {
     { scope: root }
   );
 
-  const submit = form.handleSubmit((v) => {
-    storage.set('museum-messages', [...storage.get('museum-messages', []), { ...v, createdAt: new Date().toISOString() }]);
-    setSent(true);
+  const submit = form.handleSubmit(async (v) => {
+    setSending(true);
+    setServerError('');
+    try {
+      await api('/api/messages', { method: 'POST', body: v });
+      setSent(true);
+    } catch (e) {
+      form.applyServerErrors(e.fields);
+      if (!Object.keys(e.fields || {}).length) setServerError(e.message);
+    }
+    setSending(false);
   });
 
   return (
@@ -92,7 +103,10 @@ export default function Contacts() {
             <span>Погоджуюсь на обробку персональних даних</span>
           </label>
           <span className="field__error">{fieldError('agree') || ''}</span>
-          <button type="submit" className="btn btn--gold">Надіслати</button>
+          {serverError && <p className="form-alert" role="alert">{serverError}</p>}
+          <button type="submit" className="btn btn--gold" disabled={sending}>
+            {sending ? 'Надсилаємо…' : 'Надіслати'}
+          </button>
         </form>
       </section>
 

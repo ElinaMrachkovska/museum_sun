@@ -40,7 +40,13 @@ export default function useForm(initial, validate) {
     setTouched({});
   };
 
+  // Помилки полів, які повернув сервер ({ email: 'Цей e-mail вже зареєстровано' })
+  const applyServerErrors = (fields = {}) => {
+    setErrors(fields);
+    setTouched((t) => ({ ...t, ...Object.fromEntries(Object.keys(fields).map((k) => [k, true])) }));
+  };
+
   const fieldError = (name) => (touched[name] ? errors[name] : undefined);
 
-  return { values, errors, onChange, onBlur, setValue, handleSubmit, reset, fieldError };
+  return { values, errors, onChange, onBlur, setValue, handleSubmit, reset, fieldError, applyServerErrors };
 }

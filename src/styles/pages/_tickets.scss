@@ -75,3 +75,117 @@
     strong { @include serif-title(2.4rem); color: $c-gold; display: inline-block; }
   }
 }
+
+// ---------- Способи оплати
+.radio-group--stack {
+  flex-direction: column;
+
+  .radio { width: 100%; }
+}
+
+.radio--pay {
+  padding: 14px 18px;
+
+  strong { display: block; font-weight: 600; }
+  small { color: $c-muted; font-size: 0.8rem; }
+
+  &.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    input { cursor: not-allowed; }
+  }
+}
+
+.pay-logo {
+  flex: none;
+  width: 44px;
+  height: 30px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+
+  &--liqpay { background: #7ab72b; color: #fff; &::after { content: 'Liq'; } }
+  &--monobank { background: #000; color: #fff; border: 1px solid #333; &::after { content: 'mono'; } }
+  &--cash { background: rgba($c-gold, 0.15); color: $c-gold; &::after { content: '₴'; font-size: 1rem; } }
+}
+
+.ticket-summary__note {
+  margin-top: 14px;
+  font-size: 0.78rem;
+  color: $c-muted;
+  line-height: 1.5;
+}
+
+// ---------- Сторінка результату оплати
+.result {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: calc(#{$header-h} + 40px) 0 80px;
+
+  &__card {
+    @include glass;
+    width: min(560px, 100%);
+    border-radius: 24px;
+    padding: clamp(28px, 5vw, 48px);
+    text-align: center;
+  }
+
+  &__icon {
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 2.2rem;
+    color: $c-bg;
+    background: radial-gradient(circle at 30% 30%, $c-gold-light, $c-gold 60%, #7a5a1c);
+    box-shadow: 0 0 40px rgba($c-gold, 0.45);
+  }
+
+  &--failed &__icon,
+  &--error &__icon,
+  &--notfound &__icon {
+    background: radial-gradient(circle at 30% 30%, #f08a74, $c-red 70%);
+    box-shadow: 0 0 40px rgba($c-red, 0.5);
+    color: #fff;
+  }
+
+  &--pending &__icon,
+  &--loading &__icon { animation: pulse 1.6s ease-in-out infinite; }
+
+  &__title { @include serif-title(clamp(2rem, 5vw, 2.8rem)); margin-bottom: 10px; }
+
+  &__details {
+    margin: 26px 0 0;
+    text-align: left;
+    border-top: 1px dashed $c-line;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px dashed $c-line;
+    }
+
+    dt { color: $c-muted; font-size: 0.88rem; }
+    dd { margin: 0; text-align: right; font-weight: 500; }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+  }
+}
+
+@keyframes pulse {
+  50% { transform: scale(1.08); box-shadow: 0 0 60px rgba($c-gold, 0.7); }
+}

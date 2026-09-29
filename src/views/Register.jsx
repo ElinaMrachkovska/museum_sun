@@ -4,7 +4,8 @@ import VideoBg from '../components/VideoBg.jsx';
 import Field from '../components/Field.jsx';
 import SuccessModal from '../components/SuccessModal.jsx';
 import useForm from '../hooks/useForm.js';
-import { isEmail, isPhone, minLen, storage } from '../utils/validators.js';
+import { isEmail, isPhone, minLen } from '../utils/validators.js';
+import { api } from '../utils/api.js';
 
 const interests = ['Київська Русь', 'Козацтво', 'Доба УНР', 'Реконструкції битв', 'Лекції', 'Дитячі програми'];
 
@@ -28,7 +29,6 @@ const validate = (v) => {
   if (!minLen(v.firstName, 2)) e.firstName = 'Вкажіть ім’я';
   if (!minLen(v.lastName, 2)) e.lastName = 'Вкажіть прізвище';
   if (!isEmail(v.email)) e.email = 'Некоректний e-mail';
-  else if (storage.get('museum-users', []).some((u) => u.email === v.email.trim().toLowerCase())) e.email = 'Цей e-mail вже зареєстровано';
   if (v.phone && !isPhone(v.phone)) e.phone = 'Формат: +380XXXXXXXXX';
   if (v.password.length < 8) e.password = 'Мінімум 8 символів';
   else if (passwordScore(v.password) < 3) e.password = 'Додайте великі літери, цифри або символи';
@@ -40,6 +40,8 @@ const validate = (v) => {
 export default function Register() {
   const root = useRef(null);
   const [done, setDone] = useState(null);
+  const [sending, setSending] = useState(false);
+  const [serverError, setServerError] = useState('');
   const form = useForm(initial, validate);
   const { values, onChange, onBlur, setValue, fieldError } = form;
   const score = passwordScore(values.password);
@@ -58,19 +60,30 @@ export default function Register() {
   const toggleInterest = (i) =>
     setValue('interests', values.interests.includes(i) ? values.interests.filter((x) => x !== i) : [...values.interests, i]);
 
-  const submit = form.handleSubmit((v) => {
-    // Демо без сервера: пароль НЕ зберігаємо, лише профіль.
-    const user = {
-      firstName: v.firstName.trim(),
-      lastName: v.lastName.trim(),
-      email: v.email.trim().toLowerCase(),
-      phone: v.phone,
-      interests: v.interests,
-      newsletter: v.newsletter,
-      createdAt: new Date().toISOString()
-    };
-    storage.set('museum-users', [...storage.get('museum-users', []), user]);
-    setDone(user);
+  const submit = form.handleSubmit(async (v) => {
+    setSending(true);
+    setServerError('');
+    try {
+      // Пароль хешується на сервері; поле confirm на сервер не надсилається
+      const { user } = await api('/api/register', {
+        method: 'POST',
+        body: {
+          firstName: v.firstName,
+          lastName: v.lastName,
+          email: v.email,
+          phone: v.phone,
+          password: v.password,
+          interests: v.interests,
+          newsletter: v.newsletter,
+          agree: v.agree
+        }
+      });
+      setDone(user);
+    } catch (e) {
+      form.applyServerErrors(e.fields);
+      if (!Object.keys(e.fields || {}).length) setServerError(e.message);
+    }
+    setSending(false);
   });
 
   return (
@@ -123,12 +136,15 @@ export default function Register() {
           </label>
           <span className="field__error">{fieldError('agree') || ''}</span>
 
-          <button type="submit" className="btn btn--gold btn--block">Зареєструватися</button>
+          {serverError && <p className="form-alert" role="alert">{serverError}</p>}
+          <button type="submit" className="btn btn--gold btn--block" disabled={sending}>
+            {sending ? 'Зачекайте…' : 'Зареєструватися'}
+          </button>
         </form>
       </div>
 
       <SuccessModal open={!!done} title={`Вітаємо, ${done?.firstName || ''}!`} onClose={() => { setDone(null); form.reset(); }}>
-        <p>Реєстрацію завершено. Лист з підтвердженням надіслано на <strong>{done?.email}</strong>.</p>
+        <p>Реєстрацію завершено. Ваш e-mail: <strong>{done?.email}</strong>.</p>
       </SuccessModal>
     </div>
   );

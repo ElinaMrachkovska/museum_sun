@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import Link from './Link.jsx';
 import { gsap, useGSAP } from '../gsap.js';
 
 const links = [
@@ -10,11 +10,11 @@ const links = [
   { to: '/contacts', label: 'Контакти' }
 ];
 
-export default function Header() {
+// currentPath передає Astro-сторінка (шлях без базової адреси), напр. '/tickets'
+export default function Header({ currentPath = '/' }) {
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
 
   useGSAP(
     () => {
@@ -36,8 +36,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [location.pathname]);
-
   useEffect(() => {
     document.body.classList.toggle('no-scroll', open);
     if (open) {
@@ -51,9 +49,14 @@ export default function Header() {
 
   const navItems = (cls) =>
     links.map((l) => (
-      <NavLink key={l.to} to={l.to} end className={({ isActive }) => `nav__link link-fx ${isActive ? 'is-active' : ''} ${cls}`}>
+      <Link
+        key={l.to}
+        to={l.to}
+        className={`nav__link link-fx ${currentPath === l.to ? 'is-active' : ''} ${cls}`}
+        aria-current={currentPath === l.to ? 'page' : undefined}
+      >
         {l.label}
-      </NavLink>
+      </Link>
     ));
 
   return (
@@ -90,8 +93,8 @@ export default function Header() {
       <div className="mobile-menu" aria-hidden={!open}>
         <nav className="nav nav--mobile">
           {navItems('')}
-          <NavLink to="/register" className="nav__link link-fx">Реєстрація</NavLink>
-          <NavLink to="/tickets" className="nav__link link-fx">Придбати квиток</NavLink>
+          <Link to="/register" className="nav__link link-fx">Реєстрація</Link>
+          <Link to="/tickets" className="nav__link link-fx">Придбати квиток</Link>
         </nav>
       </div>
     </header>

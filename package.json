@@ -4,24 +4,24 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "postbuild": "cp dist/index.html dist/404.html",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "server": "npm --prefix server run dev",
+    "server:install": "npm --prefix server install",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --nojekyll -m \"Публікація сайту\""
   },
   "dependencies": {
+    "@astrojs/react": "^4.4.2",
     "@gsap/react": "^2.1.2",
+    "astro": "^5.18.2",
     "gsap": "^3.15.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.6"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.7.0",
     "gh-pages": "^6.3.0",
-    "sass": "^1.105.0",
-    "vite": "^5.4.21"
+    "sass": "^1.105.0"
   }
 }

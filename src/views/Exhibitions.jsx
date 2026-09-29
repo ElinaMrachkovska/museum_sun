@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../components/Link.jsx';
 import { gsap, useGSAP } from '../gsap.js';
 import PageHero from '../components/PageHero.jsx';
 import { exhibitions } from '../data/eras.js';

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from '../components/Link.jsx';
 import { gsap, ScrollTrigger, useGSAP } from '../gsap.js';
 import VideoBg from '../components/VideoBg.jsx';
 import useReveal from '../hooks/useReveal.js';

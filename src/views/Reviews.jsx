@@ -1,16 +1,10 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { gsap, useGSAP } from '../gsap.js';
 import PageHero from '../components/PageHero.jsx';
 import Field from '../components/Field.jsx';
 import useForm from '../hooks/useForm.js';
-import { minLen, storage } from '../utils/validators.js';
-
-const seed = [
-  { id: 1, name: 'Олена', type: 'review', rating: 5, text: 'Неймовірна атмосфера! Зал козацької доби з відео облоги 1672 року — мурашки по шкірі.', date: '2026-08-14' },
-  { id: 2, name: 'Андрій', type: 'review', rating: 5, text: 'Були з дітьми, екскурсовод чудово розповів про Коріатовичів. Обов’язково повернемось.', date: '2026-08-02' },
-  { id: 3, name: 'Марта', type: 'suggestion', rating: 4, text: 'Було б чудово додати аудіогід англійською для іноземних гостей.', date: '2026-07-21' },
-  { id: 4, name: 'Тарас', type: 'review', rating: 5, text: 'Розділ про столицю УНР — відкриття для мене. Не знав, що Кам’янець мав таку роль.', date: '2026-07-09' }
-];
+import { minLen } from '../utils/validators.js';
+import { api } from '../utils/api.js';
 
 const initial = { name: '', type: 'review', rating: 0, text: '' };
 
@@ -30,7 +24,10 @@ const Stars = ({ value }) => (
 
 export default function Reviews() {
   const root = useRef(null);
-  const [items, setItems] = useState(() => storage.get('museum-reviews', seed));
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [serverError, setServerError] = useState('');
   const [tab, setTab] = useState('all');
   const [hover, setHover] = useState(0);
   const form = useForm(initial, validate);
@@ -44,25 +41,34 @@ export default function Reviews() {
     () => {
       gsap.from('.review', { y: 40, opacity: 0, stagger: 0.07, duration: 0.6 });
     },
-    { scope: root, dependencies: [tab] }
+    { scope: root, dependencies: [tab, loading] }
   );
 
-  const submit = form.handleSubmit((v) => {
-    const entry = {
-      id: Date.now(),
-      name: v.name.trim(),
-      type: v.type,
-      rating: v.type === 'review' ? v.rating : 0,
-      text: v.text.trim(),
-      date: new Date().toISOString().slice(0, 10)
-    };
-    const next = [entry, ...items];
-    setItems(next);
-    storage.set('museum-reviews', next);
+  useEffect(() => {
+    api('/api/reviews')
+      .then(({ reviews }) => setItems(reviews))
+      .catch((e) => setServerError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const submit = form.handleSubmit(async (v) => {
+    setSending(true);
+    setServerError('');
+    let review;
+    try {
+      ({ review } = await api('/api/reviews', { method: 'POST', body: v }));
+    } catch (e) {
+      form.applyServerErrors(e.fields);
+      if (!Object.keys(e.fields || {}).length) setServerError(e.message);
+      setSending(false);
+      return;
+    }
+    setSending(false);
+    setItems((list) => [review, ...list]);
     form.reset();
     setTab('all');
     requestAnimationFrame(() => {
-      gsap.fromTo('.review:first-child', { scale: 0.8, opacity: 0, backgroundColor: 'rgba(201,162,74,0.35)' }, { scale: 1, opacity: 1, backgroundColor: 'rgba(255,255,255,0.03)', duration: 1.2, ease: 'elastic.out(1, 0.6)' });
+      gsap.fromTo(document.querySelector('.review'), { scale: 0.8, opacity: 0, backgroundColor: 'rgba(201,162,74,0.35)' }, { scale: 1, opacity: 1, backgroundColor: 'rgba(255,255,255,0.03)', duration: 1.2, ease: 'elastic.out(1, 0.6)' });
     });
   });
 
@@ -91,6 +97,10 @@ export default function Reviews() {
             </div>
           </div>
 
+          {loading && <p className="muted">Завантажуємо відгуки…</p>}
+          {!loading && !serverError && shown.length === 0 && (
+            <p className="muted">Поки що тут порожньо — будьте першими, хто поділиться враженнями.</p>
+          )}
           {shown.map((r) => (
             <article className="review" key={r.id}>
               <header>
@@ -153,7 +163,10 @@ export default function Reviews() {
             onBlur={onBlur}
             error={fieldError('text')}
           />
-          <button type="submit" className="btn btn--gold">Опублікувати</button>
+          {serverError && <p className="form-alert" role="alert">{serverError}</p>}
+          <button type="submit" className="btn btn--gold" disabled={sending}>
+            {sending ? 'Публікуємо…' : 'Опублікувати'}
+          </button>
         </form>
       </section>
     </div>

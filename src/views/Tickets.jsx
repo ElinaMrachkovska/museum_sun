@@ -1,13 +1,20 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap, useGSAP } from '../gsap.js';
 import PageHero from '../components/PageHero.jsx';
 import Field from '../components/Field.jsx';
 import SuccessModal from '../components/SuccessModal.jsx';
 import useForm from '../hooks/useForm.js';
 import { tickets } from '../data/eras.js';
-import { isEmail, isPhone, isMonday, minLen, todayISO, storage } from '../utils/validators.js';
+import { isEmail, isPhone, isMonday, minLen, todayISO } from '../utils/validators.js';
+import { api, goToPayment } from '../utils/api.js';
 
 const times = ['10:00', '11:30', '13:00', '14:30', '16:00'];
+
+const paymentOptions = [
+  { id: 'liqpay', label: 'LiqPay', hint: 'картка, Apple Pay, Google Pay, Приват24' },
+  { id: 'monobank', label: 'Monobank', hint: 'картка, Apple Pay, Google Pay' },
+  { id: 'cash', label: 'На касі музею', hint: 'бронювання без оплати онлайн' }
+];
 
 const initial = {
   name: '',
@@ -15,7 +22,7 @@ const initial = {
   phone: '',
   date: '',
   time: '',
-  payment: 'card',
+  payment: 'liqpay',
   agree: false,
   ...Object.fromEntries(tickets.map((t) => [t.id, t.id === 'adult' ? 1 : 0]))
 };
@@ -39,6 +46,9 @@ export default function Tickets() {
   const root = useRef(null);
   const totalRef = useRef(null);
   const [order, setOrder] = useState(null);
+  const [methods, setMethods] = useState(null); // які способи оплати налаштовані на сервері
+  const [sending, setSending] = useState(false);
+  const [serverError, setServerError] = useState('');
   const form = useForm(initial, validate);
   const { values, onChange, onBlur, setValue, fieldError, errors } = form;
 
@@ -56,24 +66,58 @@ export default function Tickets() {
     if (totalRef.current) gsap.fromTo(totalRef.current, { scale: 1.25, color: '#f3d27a' }, { scale: 1, color: '#c9a24a', duration: 0.5 });
   }, { dependencies: [total] });
 
+  useEffect(() => {
+    api('/api/payments/methods')
+      .then((m) => {
+        setMethods(m);
+        const first = paymentOptions.find((o) => m[o.id]);
+        if (first && !m[form.values.payment]) setValue('payment', first.id);
+      })
+      .catch((e) => setServerError(e.message));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const step = (id, delta) => {
     const next = Math.max(0, Math.min(20, Number(values[id]) + delta));
     setValue(id, next);
   };
 
-  const submit = form.handleSubmit((v) => {
-    const id = `KP-${Date.now().toString(36).toUpperCase()}`;
-    const saved = { id, ...v, total, createdAt: new Date().toISOString() };
-    storage.set('museum-orders', [...storage.get('museum-orders', []), saved]);
-    setOrder(saved);
+  const submit = form.handleSubmit(async (v) => {
+    setSending(true);
+    setServerError('');
+    try {
+      const res = await api('/api/orders', {
+        method: 'POST',
+        body: {
+          tickets: Object.fromEntries(tickets.map((t) => [t.id, Number(v[t.id]) || 0])),
+          date: v.date,
+          time: v.time,
+          name: v.name,
+          email: v.email,
+          phone: v.phone,
+          payment: v.payment,
+          agree: v.agree
+        }
+      });
+      if (res.redirect) {
+        goToPayment(res.redirect); // перехід на сторінку LiqPay / Monobank
+        return;
+      }
+      setOrder(res.order);
+    } catch (e) {
+      form.applyServerErrors(e.fields);
+      setServerError(Object.keys(e.fields || {}).length ? 'Перевірте виділені поля' : e.message);
+    }
+    setSending(false);
   });
+
+  const payOnline = values.payment !== 'cash' && total > 0;
 
   return (
     <div ref={root}>
       <PageHero
         kicker="Квитки"
         title="Придбати квиток"
-        text="Оберіть дату, час і кількість квитків — електронний квиток прийде на пошту."
+        text="Оберіть дату, час і кількість квитків та оплатіть онлайн або на касі музею."
         video="/videos/tickets.mp4"
         palette={['#18120c', '#7a4a1a', '#0a0705']}
       />
@@ -120,17 +164,22 @@ export default function Tickets() {
 
           <fieldset className="form__group">
             <legend>4. Оплата</legend>
-            <div className="radio-group">
-              {[
-                ['card', 'Карткою онлайн'],
-                ['cash', 'На касі музею']
-              ].map(([val, label]) => (
-                <label key={val} className={`radio ${values.payment === val ? 'is-checked' : ''}`}>
-                  <input type="radio" name="payment" value={val} checked={values.payment === val} onChange={onChange} />
-                  <span>{label}</span>
-                </label>
-              ))}
+            <div className="radio-group radio-group--stack">
+              {paymentOptions.map((o) => {
+                const unavailable = methods !== null && !methods[o.id];
+                return (
+                  <label key={o.id} className={`radio radio--pay ${values.payment === o.id ? 'is-checked' : ''} ${unavailable ? 'is-disabled' : ''}`}>
+                    <input type="radio" name="payment" value={o.id} checked={values.payment === o.id} onChange={onChange} disabled={unavailable} />
+                    <span className={`pay-logo pay-logo--${o.id}`} aria-hidden="true" />
+                    <span>
+                      <strong>{o.label}</strong>
+                      <small>{unavailable ? 'тимчасово недоступно' : o.hint}</small>
+                    </span>
+                  </label>
+                );
+              })}
             </div>
+            <span className="field__error">{fieldError('payment') || ''}</span>
             <label className={`checkbox ${fieldError('agree') ? 'checkbox--error' : ''}`}>
               <input type="checkbox" name="agree" checked={values.agree} onChange={onChange} onBlur={onBlur} />
               <span>Я погоджуюсь з правилами відвідування музею</span>
@@ -157,19 +206,26 @@ export default function Tickets() {
             <p className="ticket-summary__total">
               Разом: <strong ref={totalRef}>{total} ₴</strong>
             </p>
-            <button type="button" className="btn btn--gold btn--block" onClick={() => document.querySelector('.ticket-form').requestSubmit()}>
-              {values.payment === 'card' ? 'Оплатити' : 'Забронювати'}
+            {serverError && <p className="form-alert" role="alert">{serverError}</p>}
+            <button
+              type="button"
+              className="btn btn--gold btn--block"
+              disabled={sending}
+              onClick={() => document.querySelector('.ticket-form').requestSubmit()}
+            >
+              {sending ? 'Зачекайте…' : payOnline ? `Оплатити ${total} ₴` : 'Забронювати'}
             </button>
+            {payOnline && <p className="ticket-summary__note">Оплата відбувається на захищеній сторінці {values.payment === 'liqpay' ? 'LiqPay' : 'Monobank'}. Дані картки не потрапляють на сайт музею.</p>}
           </div>
         </aside>
       </section>
 
-      <SuccessModal open={!!order} title="Квиток оформлено!" onClose={() => { setOrder(null); form.reset(); }}>
+      <SuccessModal open={!!order} title="Квитки заброньовано!" onClose={() => { setOrder(null); form.reset(); }}>
         {order && (
           <>
             <p>Номер замовлення: <strong>{order.id}</strong></p>
             <p>{order.date} о {order.time} · {order.total} ₴</p>
-            <p className="muted">Підтвердження надіслано на {order.email}</p>
+            <p className="muted">Оплата на касі музею. Назвіть номер замовлення касиру.</p>
           </>
         )}
       </SuccessModal>
