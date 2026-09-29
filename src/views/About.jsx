@@ -3,7 +3,8 @@ import Link from '../components/Link.jsx';
 import { gsap, useGSAP } from '../gsap.js';
 import PageHero from '../components/PageHero.jsx';
 import useReveal from '../hooks/useReveal.js';
-import { tickets, openingHours, contacts } from '../data/prices.js';
+import { tickets, contacts } from '../data/prices.js';
+import Schedule from '../components/Schedule.jsx';
 
 // Цифри — з сайту ukr-museum.org та плаката проєкту «Музеї нації»
 const stats = [
@@ -111,7 +112,7 @@ export default function About() {
       <section className="container section visit" data-reveal>
         <div>
           <h3>Години роботи</h3>
-          <p>{openingHours}</p>
+          <Schedule />
         </div>
         <div>
           <h3>Вартість</h3>

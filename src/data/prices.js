@@ -48,9 +48,14 @@ export const tickets = [
   }
 ];
 
-export const sessionTimes = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00'];
+export const sessionTimes = ['09:30', '11:00', '12:30', '14:00', '15:30', '17:00', '18:30'];
 
-export const openingHours = 'Щодня: 09:00 – 20:00';
+// Графік роботи — за даними https://ukr-museum.org/index.php?page=contacts
+export const schedule = [
+  { days: 'Пн – Пт', hours: '09:30 – 20:00' },
+  { days: 'Сб, Нд та святкові дні', hours: '09:30 – 21:00' }
+];
+export const scheduleNote = 'Каса припиняє роботу за 1 годину до закриття музею';
 
 // Контакти — за даними https://ukr-museum.org/index.php?page=contacts
 export const contacts = {

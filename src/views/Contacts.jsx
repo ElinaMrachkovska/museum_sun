@@ -7,7 +7,8 @@ import useForm from '../hooks/useForm.js';
 import useReveal from '../hooks/useReveal.js';
 import { isEmail, minLen } from '../utils/validators.js';
 import { api } from '../utils/api.js';
-import { openingHours, contacts, tel } from '../data/prices.js';
+import { contacts, tel } from '../data/prices.js';
+import Schedule from '../components/Schedule.jsx';
 
 const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent('Кам’янець-Подільський, площа Польський ринок, 19')}&z=17&output=embed`;
 
@@ -84,7 +85,7 @@ export default function Contacts() {
           </div>
           <div className="contact-item">
             <span className="contact-item__label">Години</span>
-            <p>{openingHours}</p>
+            <Schedule />
           </div>
           <div className="contact-item">
             <span className="contact-item__label">Соцмережі</span>

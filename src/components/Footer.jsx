@@ -1,5 +1,6 @@
 import Link from '../components/Link.jsx';
-import { openingHours, contacts, tel } from '../data/prices.js';
+import { contacts, tel } from '../data/prices.js';
+import Schedule from './Schedule.jsx';
 
 export default function Footer() {
   return (
@@ -29,7 +30,7 @@ export default function Footer() {
         </div>
         <div>
           <p className="footer__title">Години роботи</p>
-          <p className="footer__muted">{openingHours}</p>
+          <Schedule className="schedule--compact" />
           <a className="link-fx" href={tel(contacts.phone)}>{contacts.phone}</a>
           <a className="link-fx" href={`mailto:${contacts.email}`}>{contacts.email}</a>
         </div>

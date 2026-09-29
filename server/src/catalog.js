@@ -12,6 +12,6 @@ export const tickets = [
   { id: 'free', label: 'Супровід (безкоштовно)', price: 0 }
 ];
 
-export const sessionTimes = ['09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00'];
+export const sessionTimes = ['09:30', '11:00', '12:30', '14:00', '15:30', '17:00', '18:30'];
 
 export const MAX_PER_TYPE = 20;
