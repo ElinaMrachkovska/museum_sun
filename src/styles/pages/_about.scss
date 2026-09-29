@@ -67,7 +67,8 @@
 .visit {
   display: grid;
   gap: 30px;
-  @include up(md) { grid-template-columns: repeat(3, 1fr); }
+  @include up(sm) { grid-template-columns: repeat(2, 1fr); }
+  @include up(lg) { grid-template-columns: repeat(4, 1fr); }
 
   h3 { @include serif-title(1.7rem); color: $c-gold; margin-bottom: 10px; }
   p { color: $c-muted; }

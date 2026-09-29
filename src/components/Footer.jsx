@@ -1,4 +1,5 @@
 import Link from '../components/Link.jsx';
+import { openingHours } from '../data/prices.js';
 
 export default function Footer() {
   return (
@@ -12,6 +13,7 @@ export default function Footer() {
           <p className="footer__title">Відвідувачам</p>
           <Link className="link-fx" to="/tickets">Квитки</Link>
           <Link className="link-fx" to="/exhibitions">Експозиції</Link>
+          <Link className="link-fx" to="/gallery">Фотогалерея</Link>
           <Link className="link-fx" to="/register">Реєстрація</Link>
         </div>
         <div>
@@ -22,7 +24,7 @@ export default function Footer() {
         </div>
         <div>
           <p className="footer__title">Години роботи</p>
-          <p className="footer__muted">Вт – Нд: 10:00 – 18:00<br />Пн — вихідний</p>
+          <p className="footer__muted">{openingHours}</p>
           <a className="link-fx" href="tel:+380380000000">+38 (038) 000-00-00</a>
         </div>
       </div>

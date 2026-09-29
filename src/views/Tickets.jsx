@@ -4,11 +4,9 @@ import PageHero from '../components/PageHero.jsx';
 import Field from '../components/Field.jsx';
 import SuccessModal from '../components/SuccessModal.jsx';
 import useForm from '../hooks/useForm.js';
-import { tickets } from '../data/eras.js';
-import { isEmail, isPhone, isMonday, minLen, todayISO } from '../utils/validators.js';
+import { tickets, sessionTimes as times } from '../data/prices.js';
+import { isEmail, isPhone, minLen, todayISO, isLastTuesday, nextLastTuesday, formatDate } from '../utils/validators.js';
 import { api, goToPayment } from '../utils/api.js';
-
-const times = ['10:00', '11:30', '13:00', '14:30', '16:00'];
 
 const paymentOptions = [
   { id: 'liqpay', label: 'LiqPay', hint: 'картка, Apple Pay, Google Pay, Приват24' },
@@ -24,7 +22,7 @@ const initial = {
   time: '',
   payment: 'liqpay',
   agree: false,
-  ...Object.fromEntries(tickets.map((t) => [t.id, t.id === 'adult' ? 1 : 0]))
+  ...Object.fromEntries(tickets.map((t) => [t.id, t.id === 'full' ? 1 : 0]))
 };
 
 const validate = (v) => {
@@ -34,10 +32,12 @@ const validate = (v) => {
   if (!isPhone(v.phone)) e.phone = 'Формат: +380XXXXXXXXX';
   if (!v.date) e.date = 'Оберіть дату візиту';
   else if (v.date < todayISO()) e.date = 'Дата не може бути в минулому';
-  else if (isMonday(v.date)) e.date = 'У понеділок музей зачинено';
   if (!v.time) e.time = 'Оберіть час';
   const count = tickets.reduce((s, t) => s + Number(v[t.id] || 0), 0);
   if (count === 0) e.tickets = 'Додайте хоча б один квиток';
+  else if (tickets.some((t) => t.lastTuesdayOnly && v[t.id] > 0) && !isLastTuesday(v.date)) {
+    e.tickets = 'Соціальний квиток діє лише в останній вівторок місяця';
+  }
   if (!v.agree) e.agree = 'Потрібна згода з правилами відвідування';
   return e;
 };
@@ -54,6 +54,14 @@ export default function Tickets() {
 
   const total = tickets.reduce((s, t) => s + t.price * Number(values[t.id] || 0), 0);
   const count = tickets.reduce((s, t) => s + Number(values[t.id] || 0), 0);
+  const lastTuesday = isLastTuesday(values.date);
+  const nearestLastTuesday = nextLastTuesday();
+
+  // Дата змінилася і вже не останній вівторок — прибираємо соціальні квитки
+  useEffect(() => {
+    if (lastTuesday) return;
+    tickets.filter((t) => t.lastTuesdayOnly && values[t.id] > 0).forEach((t) => setValue(t.id, 0));
+  }, [lastTuesday]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useGSAP(
     () => {
@@ -122,23 +130,61 @@ export default function Tickets() {
         palette={['#18120c', '#7a4a1a', '#0a0705']}
       />
 
+      <section className="container section prices">
+        <p className="section-kicker">Вартість</p>
+        <h2 className="section-title">Ціни на квитки</h2>
+        <div className="prices__grid">
+          {tickets.map((t) => (
+            <article key={t.id} className={`price-card ${t.lastTuesdayOnly ? 'price-card--social' : ''}`}>
+              <h3 className="price-card__label">{t.label}</h3>
+              <p className="price-card__price">{t.price}<span> ₴</span></p>
+              <p className="price-card__note">{t.note}</p>
+              {t.categories && (
+                <ul className="price-card__list">
+                  {t.categories.map((c) => <li key={c}>{c}</li>)}
+                </ul>
+              )}
+              {t.lastTuesdayOnly && nearestLastTuesday && (
+                <p className="price-card__date">Найближчий: <strong>{formatDate(nearestLastTuesday)}</strong></p>
+              )}
+            </article>
+          ))}
+        </div>
+        <p className="prices__hint">Пільгові та соціальні квитки надаються за умови пред’явлення документа, що підтверджує право на пільгу.</p>
+      </section>
+
       <section className="container section ticket-layout">
         <form className="ticket-form form" onSubmit={submit} noValidate>
           <fieldset className="form__group">
             <legend>1. Квитки</legend>
-            {tickets.map((t) => (
-              <div className="ticket-row" key={t.id}>
-                <div>
-                  <p className="ticket-row__label">{t.label}</p>
-                  <p className="ticket-row__price">{t.price ? `${t.price} ₴` : 'Безкоштовно'}</p>
+            {tickets.map((t) => {
+              const locked = t.lastTuesdayOnly && !lastTuesday;
+              return (
+                <div className={`ticket-row ${locked ? 'is-locked' : ''}`} key={t.id}>
+                  <div>
+                    <p className="ticket-row__label">{t.label}</p>
+                    <p className="ticket-row__price">{t.price} ₴</p>
+                    <p className="ticket-row__note">
+                      {locked && nearestLastTuesday ? (
+                        <>
+                          Лише в останній вівторок місяця.{' '}
+                          <button type="button" className="link-fx ticket-row__pick" onClick={() => setValue('date', nearestLastTuesday)}>
+                            Обрати {formatDate(nearestLastTuesday)}
+                          </button>
+                        </>
+                      ) : (
+                        t.note
+                      )}
+                    </p>
+                  </div>
+                  <div className="stepper">
+                    <button type="button" onClick={() => step(t.id, -1)} disabled={locked} aria-label={`Менше: ${t.label}`}>−</button>
+                    <output aria-live="polite">{values[t.id]}</output>
+                    <button type="button" onClick={() => step(t.id, 1)} disabled={locked} aria-label={`Більше: ${t.label}`}>+</button>
+                  </div>
                 </div>
-                <div className="stepper">
-                  <button type="button" onClick={() => step(t.id, -1)} aria-label={`Менше: ${t.label}`}>−</button>
-                  <output aria-live="polite">{values[t.id]}</output>
-                  <button type="button" onClick={() => step(t.id, 1)} aria-label={`Більше: ${t.label}`}>+</button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
             {errors.tickets && <span className="field__error">{errors.tickets}</span>}
           </fieldset>
 

@@ -3,6 +3,7 @@ import Link from '../components/Link.jsx';
 import { gsap, useGSAP } from '../gsap.js';
 import PageHero from '../components/PageHero.jsx';
 import useReveal from '../hooks/useReveal.js';
+import { tickets, openingHours } from '../data/prices.js';
 
 const stats = [
   { value: 12000, label: 'експонатів у фондах' },
@@ -102,7 +103,19 @@ export default function About() {
       <section className="container section visit" data-reveal>
         <div>
           <h3>Години роботи</h3>
-          <p>Вівторок – неділя: 10:00 – 18:00<br />Каса зачиняється о 17:15<br />Понеділок — вихідний</p>
+          <p>{openingHours}</p>
+        </div>
+        <div>
+          <h3>Вартість</h3>
+          <p>
+            {tickets.map((t) => (
+              <span key={t.id}>
+                {t.label} — {t.price} ₴{t.lastTuesdayOnly ? ' (останній вівторок місяця)' : ''}
+                <br />
+              </span>
+            ))}
+          </p>
+          <Link to="/tickets" className="link-fx link-arrow">Пільги та купівля квитків →</Link>
         </div>
         <div>
           <h3>Адреса</h3>

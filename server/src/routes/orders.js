@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { db } from '../db/index.js';
 import { tickets, sessionTimes, MAX_PER_TYPE } from '../catalog.js';
 import { paymentMethods } from '../config.js';
-import { isEmail, isPhone, minLen, str, todayKyiv, isMonday, assertValid } from '../validate.js';
+import { isEmail, isPhone, minLen, str, todayKyiv, isLastTuesday, assertValid } from '../validate.js';
 import { newOrderId, publicOrder, refreshFromProvider } from '../orders.js';
 import * as liqpay from '../payments/liqpay.js';
 import * as monobank from '../payments/monobank.js';
@@ -25,7 +25,9 @@ router.post('/', async (req, res) => {
   if (!isPhone(b.phone)) errors.phone = 'Формат: +380XXXXXXXXX';
   if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date ?? '')) errors.date = 'Оберіть дату візиту';
   else if (b.date < todayKyiv()) errors.date = 'Дата не може бути в минулому';
-  else if (isMonday(b.date)) errors.date = 'У понеділок музей зачинено';
+  else if (items.some((t) => t.lastTuesdayOnly) && !isLastTuesday(b.date)) {
+    errors.tickets = 'Соціальний квиток діє лише в останній вівторок місяця';
+  }
   if (!sessionTimes.includes(b.time)) errors.time = 'Оберіть час';
   if (!['liqpay', 'monobank', 'cash'].includes(b.payment)) errors.payment = 'Оберіть спосіб оплати';
   else if (!paymentMethods()[b.payment]) errors.payment = 'Цей спосіб оплати зараз недоступний';

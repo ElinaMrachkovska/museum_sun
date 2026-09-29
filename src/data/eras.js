@@ -132,11 +132,3 @@ export const exhibitions = [
     tag: 'Нова'
   }
 ];
-
-export const tickets = [
-  { id: 'adult', label: 'Дорослий', price: 150 },
-  { id: 'student', label: 'Студентський / учнівський', price: 80 },
-  { id: 'child', label: 'Дитячий (до 7 років)', price: 0 },
-  { id: 'family', label: 'Сімейний (2 + 2)', price: 350 },
-  { id: 'tour', label: 'Екскурсія з гідом', price: 250 }
-];

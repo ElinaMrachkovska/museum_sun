@@ -7,7 +7,13 @@ export const minLen = (v, n) => str(v).length >= n;
 export const todayKyiv = () =>
   new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Kyiv' }).format(new Date());
 
-export const isMonday = (iso) => new Date(`${iso}T12:00:00Z`).getUTCDay() === 1;
+// Останній вівторок місяця: вівторок, і через тиждень уже інший місяць
+export const isLastTuesday = (iso) => {
+  const d = new Date(`${iso}T12:00:00Z`);
+  const next = new Date(d);
+  next.setUTCDate(d.getUTCDate() + 7);
+  return d.getUTCDay() === 2 && next.getUTCMonth() !== d.getUTCMonth();
+};
 
 export class ValidationError extends Error {
   constructor(fields) {

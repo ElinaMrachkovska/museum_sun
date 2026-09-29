@@ -6,6 +6,7 @@ const links = [
   { to: '/', label: 'Головна' },
   { to: '/about', label: 'Про музей' },
   { to: '/exhibitions', label: 'Експозиції' },
+  { to: '/gallery', label: 'Галерея' },
   { to: '/reviews', label: 'Відгуки' },
   { to: '/contacts', label: 'Контакти' }
 ];

@@ -7,6 +7,7 @@ import useForm from '../hooks/useForm.js';
 import useReveal from '../hooks/useReveal.js';
 import { isEmail, minLen } from '../utils/validators.js';
 import { api } from '../utils/api.js';
+import { openingHours } from '../data/prices.js';
 
 const topics = ['Загальне питання', 'Групова екскурсія', 'Співпраця / волонтерство', 'Передати експонат', 'Преса'];
 
@@ -77,7 +78,7 @@ export default function Contacts() {
           </div>
           <div className="contact-item">
             <span className="contact-item__label">Години</span>
-            <p>Вт – Нд: 10:00 – 18:00</p>
+            <p>{openingHours}</p>
           </div>
           <div className="map" data-reveal>
             <iframe

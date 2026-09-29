@@ -189,3 +189,90 @@
 @keyframes pulse {
   50% { transform: scale(1.08); box-shadow: 0 0 60px rgba($c-gold, 0.7); }
 }
+
+// ---------- Ціни
+.prices {
+  padding-bottom: 0;
+
+  &__grid {
+    display: grid;
+    gap: 20px;
+    @include up(md) { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  &__hint { margin-top: 20px; color: $c-muted; font-size: 0.9rem; }
+}
+
+.price-card {
+  position: relative;
+  padding: 28px 26px;
+  border-radius: 20px;
+  border: 1px solid $c-line;
+  background: linear-gradient(160deg, #1d1712, #110e0b);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.4s ease;
+
+  &:hover { border-color: rgba($c-gold, 0.5); }
+
+  &__label {
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $c-gold;
+  }
+
+  &__price {
+    @include serif-title(3.6rem);
+    color: $c-text;
+    span { font-size: 1.8rem; color: $c-gold; }
+  }
+
+  &__note { color: rgba($c-text, 0.85); }
+
+  &__list {
+    margin: 4px 0 0;
+    padding-left: 18px;
+    color: $c-muted;
+    font-size: 0.9rem;
+    li::marker { color: $c-gold; }
+  }
+
+  &__date {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px dashed $c-line;
+    font-size: 0.9rem;
+    color: $c-muted;
+    strong { color: $c-gold-light; font-weight: 500; }
+  }
+
+  &--social {
+    border-color: rgba($c-gold, 0.45);
+    background:
+      radial-gradient(ellipse at 100% 0%, rgba($c-gold, 0.16), transparent 60%),
+      linear-gradient(160deg, #1d1712, #110e0b);
+  }
+}
+
+.ticket-row {
+  &__note { color: $c-muted; font-size: 0.82rem; margin-top: 2px; }
+
+  &__pick {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: $c-gold;
+    font-size: inherit;
+  }
+
+  &.is-locked .ticket-row__label,
+  &.is-locked .ticket-row__price { opacity: 0.55; }
+}
+
+.stepper button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  &:hover { background: rgba(255, 255, 255, 0.06); color: inherit; }
+}
