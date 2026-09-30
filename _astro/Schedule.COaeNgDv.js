@@ -1,0 +1,1 @@
+import{j as s}from"./url.BN23qGtr.js";import{s as c,b as a}from"./prices.CKPgjBSc.js";function h({className:r=""}){return s.jsxs("div",{className:`schedule ${r}`,children:[c.map(e=>s.jsxs("p",{className:"schedule__row",children:[s.jsx("span",{children:e.days}),s.jsx("strong",{children:e.hours})]},e.days)),s.jsx("p",{className:"schedule__note",children:a})]})}export{h as S};
