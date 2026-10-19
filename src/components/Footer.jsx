@@ -1,4 +1,5 @@
 import Link from '../components/Link.jsx';
+import { url } from '../utils/url.js';
 import { contacts, tel } from '../data/prices.js';
 import Schedule from './Schedule.jsx';
 
@@ -7,6 +8,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer__grid">
         <div>
+          <img className="footer__emblem" src={url('/logo.png')} alt="Логотип музею «Від Русі до України. Кам’янець крізь віки»" width="147" height="200" loading="lazy" />
           <p className="footer__brand">Від Русі до України</p>
           <p className="footer__muted">Кам’янець крізь віки<br />{contacts.address}</p>
           <p className="socials">

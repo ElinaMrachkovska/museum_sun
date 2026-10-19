@@ -31,6 +31,19 @@
     z-index: 2;
 
     span { display: flex; flex-direction: column; line-height: 1; }
+
+    // Логотип музею на світлій плашці (синій тризуб погано видно на темному тлі)
+    .header__emblem {
+      width: auto;
+      height: 50px;
+      padding: 4px 6px;
+      border-radius: 10px;
+      background: #f4efe4;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      transition: height 0.4s ease;
+    }
+
+    .header--scrolled & .header__emblem { height: 42px; }
     strong { font-family: $f-serif; font-size: 1.3rem; color: $c-text; }
     em { font-family: $f-serif; font-style: italic; font-size: 1rem; }
   }

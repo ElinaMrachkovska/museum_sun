@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from './Link.jsx';
+import { url } from '../utils/url.js';
 import { gsap, useGSAP } from '../gsap.js';
 
 const links = [
@@ -63,9 +64,7 @@ export default function Header({ currentPath = '/' }) {
   return (
     <header ref={ref} className={`header ${scrolled ? 'header--scrolled' : ''} ${open ? 'header--open' : ''}`}>
       <Link to="/" className="header__logo" aria-label="На головну">
-        <svg viewBox="0 0 64 64" width="38" height="38" aria-hidden="true">
-          <path d="M32 6l6 14h-4v10l8-6v8l-8 6v10h6l-8 6-8-6h6V38l-8-6v-8l8 6V20h-4z" fill="currentColor" />
-        </svg>
+        <img className="header__emblem" src={url('/logo.png')} alt="" width="147" height="200" />
         <span>
           <strong>Від Русі</strong>
           <em>до України</em>

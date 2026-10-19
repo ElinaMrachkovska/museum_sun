@@ -17,6 +17,15 @@
     > div { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
   }
 
+  &__emblem {
+    width: 72px;
+    height: auto;
+    padding: 10px;
+    border-radius: 16px;
+    background: #f4efe4;
+    margin-bottom: 10px;
+  }
+
   &__brand { @include serif-title(2rem); color: $c-gold; }
   &__title { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; color: $c-gold; margin-bottom: 6px; }
   &__muted { color: $c-muted; font-size: 0.92rem; }
