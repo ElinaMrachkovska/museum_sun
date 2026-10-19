@@ -166,6 +166,33 @@ export const photos = [
     "category": "Музей"
   },
   {
+    "src": "/gallery/knyha-vidhukiv-1.jpg",
+    "thumb": "/gallery/thumbs/knyha-vidhukiv-1.jpg",
+    "width": 1200,
+    "height": 1600,
+    "alt": "Гість музею робить запис у книзі відгуків",
+    "caption": "Гості залишають записи в книзі відгуків",
+    "category": "Музей"
+  },
+  {
+    "src": "/gallery/knyha-vidhukiv-2.jpg",
+    "thumb": "/gallery/thumbs/knyha-vidhukiv-2.jpg",
+    "width": 1200,
+    "height": 1600,
+    "alt": "Відвідувачі музею біля книги відгуків",
+    "caption": "Враження після екскурсії — у книзі відгуків",
+    "category": "Музей"
+  },
+  {
+    "src": "/gallery/knyha-vidhukiv-3.jpg",
+    "thumb": "/gallery/thumbs/knyha-vidhukiv-3.jpg",
+    "width": 1200,
+    "height": 1600,
+    "alt": "Відвідувачка пише відгук у книзі музею",
+    "caption": "Книга відгуків музею",
+    "category": "Музей"
+  },
+  {
     "src": "/gallery/podarunkovyi-sertyfikat.jpg",
     "thumb": "/gallery/thumbs/podarunkovyi-sertyfikat.jpg",
     "width": 1200,
